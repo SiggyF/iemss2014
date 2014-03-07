@@ -1,12 +1,10 @@
-
 \documentclass[a4paper]{article}
 \usepackage{iemss}
 \usepackage[pdftex]{graphicx}
-\usepackage{natbib}
-\usepackage{amsmath}
+\usepackage[authoryear]{natbib}
 \usepackage[labelfont=bf,textfont=sf,labelsep=period]{caption}
 \usepackage[english]{babel}
-%\RequirePackage{lineno} % for line numbers
+% \RequirePackage{lineno} % for line numbers
 
 \pdfpagewidth=210 true mm
 \pdfpageheight=297 true mm
@@ -17,6 +15,7 @@
 \bibpunct{[}{]}{;}{a}{,}{,~}
 
 \pagestyle{IEMSSheadings}
+
 
 
 \DeclareRobustCommand{\orderof}{\ensuremath{\mathcal{O}}}
@@ -31,22 +30,22 @@
 \title{Interactive web based flood modeling at country wide scale and planter size resolution.}
 
 
-%Authors Names and Affiliations:  Two spaces below the title, 10 pt
-%Arial, Upper and Lower Case, underline author presenting
-%paper and  provide his/her email address
+% Authors Names and Affiliations:  Two spaces below the title, 10 pt
+% Arial, Upper and Lower Case, underline author presenting
+% paper and  provide his/her email address
 
 
 \author{\underline{F. Baart}
-\address[A1]{\it{Deltares,
-Rotterdamseweg
-Delft, The Netherlands (fedor.baart@deltares.nl, arthur.vandam@deltares.nl, gennadii.donchyts@deltares.nl)}},
-J. Ha
-\address[B1]{\it{Nelen \& Schuurmans,
-Zakkendragerssteeg,
-Utrecht, The Netherlands (jack.ha@nelen-schuurmans.nl, martijn.siemerink@nelen-schuurmans.nl)}},
-A. van Dam \addressmark[A1],
-G. Donchyts \addressmark[A1],
-M. Siemerink \addressmark[B1]
+  \address[A1]{\it{Deltares,
+      Rotterdamseweg
+      Delft, The Netherlands (fedor.baart@deltares.nl, arthur.vandam@deltares.nl, gennadii.donchyts@deltares.nl)}},
+  J. Ha
+  \address[B1]{\it{Nelen \& Schuurmans,
+      Zakkendragerssteeg,
+      Utrecht, The Netherlands (jack.ha@nelen-schuurmans.nl, martijn.siemerink@nelen-schuurmans.nl)}},
+  A. van Dam \addressmark[A1],
+  G. Donchyts \addressmark[A1],
+  M. Siemerink \addressmark[B1]
 }
 
 
@@ -54,12 +53,12 @@ M. Siemerink \addressmark[B1]
 
 
 \begin{abstract}
-The flooding of rural and urban areas is an increasing hazard to society. Accurate and timely predictions are essential for the water manager to prepare and respond to these hazards.
-Predicting flooding requires a numerical model that represents the physical processes (rain, evaporation, infiltration, overland flow, groundwater flow). This model, fed with measurements, and possible measures, calculates the expected flooding.
-The traditional modelling process consists of a three step process: schematization setup, model running and post-processing, with a total feedback time of hours.  This process is suitable for confirmatory modelling. Most of the time, models are applied exploratory, requiring a different workflow.
-Enabling exploratory modelling requires a shift in utilisation of the modelling instrument. Stakeholders are in control and together evaluate ideas by interacting with the model through a mobile compatible website, supported by the modellers’ expertise. Enabling this type of interactive modelling requires a new level of performance.
-The \threedi platform, in which the new approach was applied, consists of a new flooding and hydrological model (1D/2D) with a corresponding cloud based infrastructure. Applications in rural and urban areas of \orderof(1000km2) at a resolution of \orderof(0.1m) have shown its capabilities for both exploratory and confirmatory modelling.
-The ambition that every component should be at least a 100 times faster than the previous approach, resulted in several advancements, both in the numerical engine and the software that interacts with the user and pushes the data to the web. Here we show advancements in the architecture and model communication.
+  The flooding of rural and urban areas is an increasing hazard to society. Accurate and timely predictions are essential for the water manager to prepare and respond to these hazards.
+  Predicting flooding requires a numerical model that represents the physical processes (rain, evaporation, infiltration, overland flow, groundwater flow). This model, fed with measurements, and possible measures, calculates the expected flooding.
+  The traditional modelling process consists of a three step process: schematization setup, model running and post-processing, with a total feedback time of hours.  This process is suitable for confirmatory modelling. Most of the time, models are applied exploratory, requiring a different workflow.
+  Enabling exploratory modelling requires a shift in utilisation of the modelling instrument. Stakeholders are in control and together evaluate ideas by interacting with the model through a mobile compatible website, supported by the modellers’ expertise. Enabling this type of interactive modelling requires a new level of performance.
+  The \threedi platform, in which the new approach was applied, consists of a new flooding and hydrological model (1D/2D) with a corresponding cloud based infrastructure. Applications in rural and urban areas of \orderof(1000km2) at a resolution of \orderof(0.1m) have shown its capabilities for both exploratory and confirmatory modelling.
+  The ambition that every component should be at least a 100 times faster than the previous approach, resulted in several advancements, both in the numerical engine and the software that interacts with the user and pushes the data to the web. Here we show advancements in the architecture and model communication.
 
 \end{abstract}
 \begin{keyword}
@@ -71,12 +70,31 @@ The ambition that every component should be at least a 100 times faster than the
 \section{Introduction}
 
 The flooding of rural and urban areas is an increasing hazard to society. Accurate and timely predictions are essential for the water manager to be able to carefully plan, design and control the effects of flooding hazard.
-For the prediction of these flooding hazards requires a numerical model that represents the physical processes (rain, evaporation, flow, infiltration). This model is fed with measurements from current or historic events. The results of these calculations, the expected flooding, is used for damage estimates, dike design, spatial and emergency planning and for coordinating response efforts.
-Several challenges required an innovative redesign of both the numerical model and the information infrastructure where it is nested within.
-The traditional working method for modelers is to prepare the input of the schematization (grid and input measurements), run a model, wait a while for the model to complete and finally post-process the results. This is working method is suitable for confirmatory modeling (making the best prediction a few days ahead). Most of the questions that people use numerical models for are exploratory. To effectively plan and design a water system it is important to provide an indication of the effect of a measure in seconds, not over night or even over coffee.
+For the prediction of these flooding hazards requires a numerical model that represents the physical processes (rain, evaporation, flow, infiltration). This model is fed with measurements from current or historic events. The results of these calculations, the expected flooding, is used for damage estimates, dike design, spatial and emergency planning and for coordinating response efforts. Several challenges required an innovative redesign of both the numerical model and the information infrastructure where it is nested within.
+
+
+These challenges arise from the movement towards more efficient working methods.
+\begin{itemize}
+\item \emph{Confirmatory versus exploratory}  \cite{Baart2013}
+\item \emph{Passive versus interactive}
+\item \emph{Solitary versus social}
+\end{itemize}
+
+Other challenges arise from the increased data volumes.
+\begin{itemize}
+  \item \emph{Measurements}
+  \item \emph{Communication}
+\end{itemize}
+
+
+
+The traditional working method for modelers is to prepare the input of the schematization (grid and input measurements), run a model, wait a while for the model to complete and finally post-process the results. This is working method is suitable for confirmatory modeling (making the best prediction a few days ahead). Most of the questions that people use numerical models for are exploratory.
+
 The traditional working method was also that the modeler was in control. The exploratory approach is often a social process where multiple stakeholders interact and the model is used to test and evaluate ideas. This requires the stakeholders to be in control and not the modeler. The main visualization and interaction method is through a mobile compatible website.
+
 The amount of data involved in preparing the model is rapidly increasing. There is an increase in supply of data caused by the ever growing measurement resolution and spatial coverage. For example the topology of waterbodies at a spatial coverage of a small country are used to determine if the water will find its way into ones neighborhood. The topography and infiltration rate at a spatial resolution of a planter determine if the water will flow to ones backyard or the neighbors.
 This resulted in the question how can we design a platform that is suitable for this new modeling approach and meets the corresponding challenges.
+
 The 3Di platform, in which the new approach was applied, consists of a new overland flooding model (1D/2D) and a corresponding infrastructure that has been applied for both exploratory and confirmatory modeling of rural and urban areas at coverages of O(1000km2) at a resolution of O(0.1m).
 The advances on a numerical level, by implementing a quad tree structure allowing only the relevant physics to be computed, resulting in an order of magnitude speedup have been previously presented. Here we present the new architecture and it's underlying components, resulting in the advances in model interaction and scalability.
 The new multi-tier infrastructure was designed under the following conditions:
@@ -91,37 +109,30 @@ A provisioning module is used to quickly deploy new updates of models schematiza
 The new platform has been deployed at several locations in the Netherlands and in Singapore. In preliminary tests we found that the model has skill comparable to previous models. Setting the bar for performance a few order of magnitudes higher resulted in new ideas instead of improved existing ideas. A major part of the platform (model messaging, WMS server) has been released open source because it can also be used with other models. The numerical model is shared within a small community.
 By solving the challenges new challenges arise. The new challenges are technical and social. How can we dynamically filter out the most relevant information from the platform as the bandwidth and browsers rendering power of the mobile browsers is limited and varying. The shift towards social and exploratory modeling and away from the modeler "in control" require new best practices. How do we make sure information is used correctly? How "true" is the information perceived?
 
-
-
 \section{Method}
-
-Header of the first page should be as appears in this instructions' paper (right justified). Headers of following pages should be: the name of the authors (initial(s) and name) / title of the paper (centered). If there are more than two authors write first author et al. If the title is too long, cut the title where needed and put three dots. Headers text should be in italics 8 pt. Arial.
-No footer should appear. \textbf{Do not} number the pages. Numbering of the pages will be done by the editors of the Proceedings.
-
+\subsection{}
+\subsection{}
 
 \section{Results}
-Equations should be numbered consecutively as they appear in the
-text with Arabic numerals and should be referred to by their
-numbers only, e.g. (3).  Equations must be typed not hand printed.
-About 5 mm should be left clear above and below each equation.
-
+\subsection{Numerical model}
+\subsection{Architecture}
+\subsection{Communication}
+\subsection{Visualization}
 \begin{figure}[h]
-\centering
-\includegraphics[width=10cm]{interpolationlevees2}
-\caption{Interpolation method}
-\label{fig1}
+  \centering
+  \includegraphics[width=10cm]{interpolationlevees2}
+  \caption{Interpolation method}
+  \label{fig1}
 \end{figure}
-
-
 
 \section{Conclusions and Recommendations}
 
 
-It was shown by \citet{berry:teomowcihbsi} that...
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{iemss}
-\bibliography{iemss}
+\bibliography{bibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
