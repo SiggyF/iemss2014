@@ -109,8 +109,8 @@ A provisioning module is used to quickly deploy new updates of models schematiza
 The new platform has been deployed at several locations in the Netherlands and in Singapore. In preliminary tests we found that the model has skill comparable to previous models. Setting the bar for performance a few order of magnitudes higher resulted in new ideas instead of improved existing ideas. A major part of the platform (model messaging, WMS server) has been released open source because it can also be used with other models. The numerical model is shared within a small community.
 By solving the challenges new challenges arise. The new challenges are technical and social. How can we dynamically filter out the most relevant information from the platform as the bandwidth and browsers rendering power of the mobile browsers is limited and varying. The shift towards social and exploratory modeling and away from the modeler "in control" require new best practices. How do we make sure information is used correctly? How "true" is the information perceived?
 
-\section{Numerical model: Arthur}
-\subsection{SubgridF90}
+\section{Numerical model: Arthur \& Fedor}
+\subsection{SubgridF90 \emph{Arthur}}
 \begin{itemize}
   \item architecture (Initialize, run, finalize)
   \item numerical progress (groundwater, subgrid, 1d2d)
@@ -118,70 +118,70 @@ By solving the challenges new challenges arise. The new challenges are technical
 \end{itemize}
 
 
-\subsection{Datatypes}
+\subsection{Datatypes \emph{Fedor}}
 \begin{itemize}
   \item raster
   \item quad unstructured
   \item 1d network
   \item structure tables
 \end{itemize}
-\section{Architecture: Jack}
-\subsection{Overview}
+\section{Architecture: Jack \& Fedor}
+\subsection{Overview \emph{Jack}}
 \begin{itemize}
   \item controller
   \item wms
   \item socket server
 \end{itemize}
-\subsection{Web based models}
+\subsection{Web based models \emph{Fedor}}
 \begin{itemize}
   \item provisioning
   \item interaction
   \item social modeling
 \end{itemize}
-\subsection{Data sources}
+\subsection{Data sources \emph{Fedor}}
 \begin{itemize}
   \item lidar
   \item rain example
   \item structures/levees
 \end{itemize}
 
-\section{Coupling: Fedor}
-\subsection{BMI}
+\section{Coupling: Fedor \& Gena}
+\subsection{BMI \emph{Gena}}
 \begin{itemize}
   \item bmi implementation in subgrid
   \item python api
   \item compound types
   \item shared memory
 \end{itemize}
-\subsection{MMI}
+\subsection{MMI \emph{Fedor}}
 \begin{itemize}
   \item message interface
   \item serialization
   \item comparison to other interfaces
 \end{itemize}
-\subsection{Websockets}
+\subsection{Websockets \emph{Fedor}}
 \begin{itemize}
   \item Advantages of push for models
   \item Serialization
 \end{itemize}
-\section{Visualization: Martijn}
-\subsection{Ravensburger}
+\section{Visualization: Martijn \& Fedor }
+\subsection{Ravensburger \emph{Fedor}}
 \begin{itemize}
   \item performance comparison
   \item WMS/TWMS coupling
 \end{itemize}
-\subsection{Interpolation}
+\subsection{Interpolation \emph{Martijn}}
 \begin{figure}[h]
   \centering
   \includegraphics[width=10cm]{interpolationlevees2}
   \caption{Interpolation method}
   \label{fig1}
 \end{figure}
-\section{Limitations: Fedor}
+\section{Limitations: \emph{All}}
 
-\section{Future plans: Fedor}
+\section{Future plans: \emph{All}}
 
-\section{Conclusions: Fedor}
+\section{Conclusions: \emph{Fedor}}
 
 
 
