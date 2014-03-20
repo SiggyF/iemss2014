@@ -138,9 +138,18 @@ In several workshops, model coupling frameworks \citep[see][for an overview]{Jag
 \item \textbf{finalize()}: Finalize the model, memory cleanup, file flushing, statistics reporting.
 \end{enumerate}
 
+\begin{wrapfigure}[19]{r}{0.5\textwidth}
+\centering
+\includegraphics[width=0.48\textwidth]{subgrid_hydrology}
+\caption{Subgrid infiltration into heterogeneous landscape.}
+\label{fig:figure2}
+\end{wrapfigure}
+
 In between these interface calls, the model state may be changed from outside and the core should support that. The library is loaded and can remain a running process for a long time, for many different models.. A positive side-effect of implementing this interface is that it may reveal subtle inconsistencies in existing code, for example when initializing different models after one another: incomplete cleanup of previous settings, already allocated memory, unclosed file pointer.
 
+
 The power and elegance of the subgrid concept is now also proving itself for the hydrological processes in the subsoil. The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}. Coupling the 2D grid with 1D channels and controllable structures enables greater detail in civilized regions.
+
 
 Another important influence on potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
 \[
@@ -148,57 +157,47 @@ Another important influence on potential flooding is the storage of water in the
 \]
 Infiltration, evaporation and drainage are now also evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance.
 
-The heterogeneous landscape and land use (be it it urban and/or rural) are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance and maximum infiltration. Consider the basic head-dependent linear infiltration in (\ref{eq:qinf}) as an example. Note that this specific type of head-dependent infiltration rate in can be chosen freely, but the fact that it uses pixel-resolution soil characteristics is what is important here.
+The heterogeneous landscape and land use (be it it urban and/or rural) are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance and maximum infiltration. Consider the basic head-dependent linear infiltration in (\ref{eq:qinf}) as an example.
 %
-\begin{figure}[h]
-\begin{minipage}[b]{0.55\linewidth}
-\begin{multline}
+\begin{equation}
 \label{eq:qinf}
-Q_\mathrm{infiltration}=\\
-\sum_{\mathrm{pixels}\ i,j} \frac{\min(0, \zeta_\mathrm{sw}-\max(h_\mathrm{gw}, d_{i,j}))}{\mathrm{resistance}_{i,j}}\Delta x_p \Delta y_p,
-\end{multline}
+Q_\mathrm{infiltration}= \sum_{\mathrm{pixels}\ i,j} \frac{\min(0, \zeta_\mathrm{sw}-\max(h_\mathrm{gw}, d_{i,j}))}{\mathrm{resistance}_{i,j}}\Delta x_p \Delta y_p,
+\end{equation}
 where $\zeta_\mathrm{sw}$ and $h_\mathrm{gw}$ are surface and ground water level, respectively, and $d_{i,j}$ is the surface/bed level of pixel $(i,j)$. Notice how dry pixels (higher land) do not amount to the total infiltration.
 
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[t]{0.4\linewidth}
-\centering
-\includegraphics[width=\textwidth]{subgrid_hydrology}
-\caption{Subgrid infiltration into heterogeneous landscape.}
-\label{fig:figure2}
-\end{minipage}
-\end{figure}
+
+Note that this specific type of head-dependent infiltration rate in can be chosen freely, but the fact that it uses pixel-resolution soil characteristics is what is important here.
+
 %
 These advances in the numerical model allow the model to act as a component in the interactive web-based model environment that will be described in the next section.
 
 \section{Architecture}
-\begin{wrapfigure}[12]{r}{0.5\textwidth}
+\begin{wrapfigure}[12]{l}{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.48\textwidth]{architecture}
+  \caption{Architecture overview}
+  \label{fig:arch}
+\end{wrapfigure}
+
+To enable social and interactive modeling through a map environment the most logical choice was to use a web based environment. Over the last years this choice has become easier through the large list of advancements for browser based applications.  An overview of the architecture is given in \autoref{fig:arch}. Notice how the architectural follows the general Model View Controller pattern \citep{GOF2004}. On a high level the architecture follows is classic. In this section we will describe the lower level, yet important,  technical innovations that made the application of this architecture successful.
+
+\begin{wrapfigure}[16]{r}{0.5\textwidth}
   \centering
   \includegraphics[width=0.48\textwidth]{webgui}
   \caption{Web \ac{GUI}}
   \label{fig:gui}
 \end{wrapfigure}
 
-To enable social and interactive modeling through a map environment the most logical choice was to use a web based environment. Over the last years this choice has become easier through the large list of advancements for browser based applications.
+The end-users, interact with the web based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example manholes can only be placed inside the model domain, and can be controlled by only two different discharge settings (normal and extreme discharge). Sessions with groups of end-users resulted in the idea that this interface was the most usable. The design goals of providing freedom to explore together with high resolution high frequency model output, yet without the insinuation that the model results are ``true'' proves to be challenging. Many end-users confuse high resolution, detailed tuning parameters and higher frequency results with higher accuracy.
 
-The end-users, interact with the web based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example manholes can only be placed inside the model domain, and can be controlled by only two different discharge settings (normal and extreme discharge). It was tested in several sessions with end-users that this interface was the most usable interface for the intended audience.
+Several challenges arise when preparing a model for a web-based use. One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website as a whole searching for a new ``frisson'' \citep{Carr2011}.
 
+To make sure that the model is ready to run when a user arrives and no time is lost with starting up, initializing, reading files a lot of attention is given to the provisioning of the model. Provisioning in this context is preparing a model controller so that it starts it's computation on request. Machines are prepared and put on hold at one of the \ac{IaaS} providers (such as Amazon). These machines are prepared with a container that contains the model schematization, tables and grids and hot restart files. The tables, grids and restart files are read into memory so that the model is ready to start its computation when it is needed. This results in a time between a user logging in and a model start below 5 seconds.
 
+Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice she expects a response within a second. This short feedback loop is achieved using several techniques. Using the regular \ac{HTTP} GET Request is too slow in this case. To reduce communication we use a chain of direct connections. This starts with a websocket \citep{w3c2010} connection between the message broker and the browser. The model controller gets notified directly of user interactions. These interactions are collected in a separate thread and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run. A timestep resulting in a computation time of \si{100}{\mili\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these events and can directly visualize the results. This message broker approach allows interactions with a feedback time in the order of \si{100}{\mili\second}, which gives a good sense of interactivity.
 
-\subsection{Overview}
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=10cm]{architecture}
-  \caption{Architecture overview}
-  \label{fig:arch}
-\end{figure}
+As a final challenge there is the social aspect of modeling. Several group sessions with different settings have been tried. The current setup is that the model is run in a channel, like in a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler was present in the session.
 
-\subsection{Web based models }
-\begin{itemize}
-  \item provisioning
-  \item interaction
-  \item social modeling
-\end{itemize}
 \subsection{Data sources }
 \begin{itemize}
   \item lidar
@@ -322,6 +321,8 @@ In that respect, combining the subgrid approach with our own unstructured flow s
 \acro{API}{Application Programming Interface}
 \acro{GUI}{Graphical User Interface}
 \acro{DEM}{Digital Elevation Model}
+\acro{HTTP}{Hyper Text Transfer Protocol}
+\acro{IaaS}{Infrastructure as a Service}
 \end{acronym}
 
 
