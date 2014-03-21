@@ -32,8 +32,9 @@
 % DIMENSION OF TEXT:
 \textheight 23.2cm                 % Height of text part of page
 \textwidth 13.65cm                  % Width of text part of page, i.e of line
+\textwidth 16.0cm                  % Width of text part of page, i.e of line
 %\hoffset 0.5cm
-\hoffset 0.45cm
+\hoffset 0.25cm
 %\voffset 0.5cm
 \voffset 0.4cm
 
@@ -150,8 +151,10 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
     {\centering\rmfamily\fontsize{18pt}{20}\bfseries\selectfont\@title\par} % Title set in larger font. CENTERED
     \vskip\@bls                   % One line of vertical space after title.
     {\centering{\bf\normalsize        % each author set in the normal CENTERED
-    \@author} \par                 % typeface size
-    \vskip\@bls                   % One line of vertical space after author(s).
+    \@author}\\
+  % \par                 % typeface size
+    % \vskip
+   \@bls                   % One line of vertical space after author(s).
     \@address                     % all addresses
     \vskip 1cm}
   \egroup
@@ -200,7 +203,7 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \def\abstract{%
   \global\setbox\abstract@box=\vbox\bgroup
   \normalsize\rm
-  \ignorespaces{\bf{\abstractname}}}
+  \ignorespaces{\bf{\abstractname :}}}
 \def\endabstract{\par \egroup}
 
 % KEYWORDS
@@ -298,7 +301,7 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \emergencystretch=1pc           % (with 1 pc extra for emergencies),
 \flushbottom                    % and pages of equal length
 
-\oddsidemargin 5.9mm
+\oddsidemargin 2.5mm
 \evensidemargin 0.9mm
 \topmargin      0mm
 \headheight     0mm
