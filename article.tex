@@ -7,14 +7,51 @@
 
 % extra packages not in the template
 % Don't color hyperlinks
+\usepackage{siunitx}
 \usepackage{wrapfig}
 \usepackage{paralist}
 \usepackage[draft]{hyperref}
 \usepackage{amsmath}
-\usepackage[printonlyused,withpage]{acronym}
+\usepackage[printonlyused]{acronym}
 \usepackage{sansmath}
+\usepackage{listings}
+\usepackage[list=true]{subcaption}
 
 % \RequirePackage{lineno} % for line numbers
+
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.2,0.2,0.2}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygray},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  % frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Python,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mygray},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
 
 \pdfpagewidth=210 true mm
 \pdfpageheight=297 true mm
@@ -29,7 +66,7 @@
 
 
 \DeclareRobustCommand{\orderof}{\ensuremath{\mathcal{O}}}
-\DeclareRobustCommand{\threedi}{3Di }
+\DeclareRobustCommand{\threedi}{3Di~}
 
 % Text to appear in the header of the pages
 \IEMSShead{Baart et al. / Interactive web-based flood modeling}
@@ -95,26 +132,7 @@ These challenges arise from the movement towards more modern working methods and
 The amount of data involved in preparing the model is rapidly increasing. There is an increase in supply of data caused by the ever growing measurement resolution and spatial coverage. For example the topology of waterbodies at a spatial coverage of a small country are used to determine if the water will find its way into ones neighborhood. The topography and infiltration rate at a spatial resolution of a planter determine if the water will flow to ones backyard or the neighbors.
 This resulted in the question how can we design a platform that is suitable for this new modeling approach and meets the corresponding challenges.
 
-% Several attempts have been made to enable the movement towards these new working methods and increased data volumes.
-% Refs Numerical (adaptive mesh): overview
-% Interactive models: IRF: ESMF, OpenMI
-% Social modelling:
-% Web based modelling:
-
 The \threedi  platform, in which these approaches and several new ones are applied, consists of a new overland flooding model (1D/2D) and a corresponding infrastructure that has been applied for interactive web-based modeling of rural and urban areas at coverages of \orderof(1000km2) at a resolution of \orderof(0.1m). Here we describe the advances in the numerical methods, architecture and visualization techniques that were used to create the platform.
-
-% The advances on a numerical level, by implementing a quad tree structure allowing only the relevant physics to be computed, resulting in an order of magnitude speedup have been previously presented. Here we present the new architecture and it's underlying components, resulting in the advances in model interaction and scalability.
-% The new multi-tier infrastructure was designed under the following conditions:
-% Every aspect of the system should be 100 times faster than the previous approach.
-% The main end user is the water-manager, who is assumed to only know how to use a browser and likes to present realistic looking results.
-% The modeling should be interactive and social, meaning that multiple people can interact with the same running model at the same time.
-% The system should be able to run both in private and public clouds. The numerical model should be able to run on a single computer on a supercomputer and in the cloud.
-% The main interface is a mobile compatible website. The model results are rendered on the client in a html5 web map using both bitmap and vector graphics. The user can interact with the model in several ways, for example by changing properties of hydraulic structures, water levels, discharge locations, rain events. The browser transforms these interactions into messages which are pushed back to the model through websockets. Model results are also pushed to the browser using websockets and on request through a Web Map Service (WMS) extended with time support.
-% The web application server forwards the websockets messages back and forth between the browser and the model. This application also keeps track of authorization, authentication, user preferences and the social aspects, who is watching which model, who is in control.
-% The numerical model was adapted to an interactive model by implementing the low level, non invasive BMI interface. This interface makes the numerical model adhere to the Hollywood principle (don't call us, we'll call you): the control of the initialize, update and finalize steps are called from outside of the numerical model. All variables of the model can be accessed through direct or shared memory access, allowing for communication within nanoseconds. The numerical model can be run as a command line executable (for operational runs), in a GUI (for schematization design), as a shared library (for data exchange) and as a message publisher/puller (for interaction). A separate tool generates photo-realistic renderings in 3D stereo for presentation purposes. The messaging publisher module, which works for any BMI compliant model, allows to push results to the browser at a rate of over 20 time per second and a latency of under 50ms.
-% A provisioning module is used to quickly deploy new updates of models schematization and to scale when more running models or WMS servers are required. Models can run at cloud providers and at the central server. Model schematizations are kept under distributed version control so that updates can be pushed and different versions of the same model can be used.
-% The new platform has been deployed at several locations in the Netherlands and in Singapore. In preliminary tests we found that the model has skill comparable to previous models. Setting the bar for performance a few order of magnitudes higher resulted in new ideas instead of improved existing ideas. A major part of the platform (model messaging, WMS server) has been released open source because it can also be used with other models. The numerical model is shared within a small community.
-% By solving the challenges new challenges arise. The new challenges are technical and social. How can we dynamically filter out the most relevant information from the platform as the bandwidth and browsers rendering power of the mobile browsers is limited and varying. The shift towards social and exploratory modeling and away from the modeler "in control" require new best practices. How do we make sure information is used correctly? How "true" is the information perceived?
 
 \section{Numerical model}
 The computational core originates from core components of the {SOBEK} 1D2D flooding software \citep{Stelling2006}, and has undergone three major transformations. \begin{inparaenum}
@@ -124,9 +142,9 @@ The computational core originates from core components of the {SOBEK} 1D2D flood
 \end{inparaenum}
 
 The traditional standalone flooding program and its integrated \ac{GUI} have been split into dedicated components. Most importantly, the core library with all numerical algorithms and I/O. On top of this core library are independent ways of addressing the core: a light-weight interface library that exposes the \ac{API}, and the original technical \ac{GUI} that acts as a sandbox for early developments.
-The core and \ac{API} offer powerful new functionality for direct and fast interaction using introspection (described in \autoref{sec:coupling} and the Hollywood-principle.
+The core and \ac{API} offer powerful new functionality for direct and fast interaction using introspection (implemented using the \ac{BMI} and the Hollywood-principle.
 
-By introspection, the outside world (e.g., a Python-based website, a C\#-\ac{GUI}, a MATLAB-script) can examine model state at run time. More specifically: get current water levels and flow fields, current running state of water pumps and other structures, active meteorological forcings. Each of these state variables can just as easily be \emph{set} as they are \emph{read}. The \ac{API} exposes memory pointers to relevant model state variables. The model will directly 'feel' and use its new state.
+By introspection, the outside world (e.g., a Python-based website, a C\#-\ac{GUI}, a MATLAB-script) can examine model state at run time. More specifically: get current water levels and flow fields, current running state of water pumps and other structures, active meteorological forcings. Each of these state variables can just as easily be \emph{set} as they are \emph{get}. These functions are implemented in correspondence with the \ac{BMI} standard \citep{Peckham2013}. The \ac{API} exposes memory pointers to relevant model state variables. This is how the model directly `feels' and uses its new state.
 
 The freedom of changing model state is possible due to the core and \ac{API} adhering to the Hollywood Principle: ``Don't call us, we'll call you''. The core or model does not run itself, but instead is instructed by the outside world. Typically, the timeloop from a conventional program is extracted and moved to the calling application; only the single timestep remains in the core.
 
@@ -147,176 +165,168 @@ In several workshops, model coupling frameworks \citep[see][for an overview]{Jag
 
 In between these interface calls, the model state may be changed from outside and the core should support that. The library is loaded and can remain a running process for a long time, for many different models.. A positive side-effect of implementing this interface is that it may reveal subtle inconsistencies in existing code, for example when initializing different models after one another: incomplete cleanup of previous settings, already allocated memory, unclosed file pointer.
 
+\begin{enumerate}
+\item \textbf{variable = get(``name'')}: Return a variable from the model
+\item \textbf{set(``name'', variable)}: Set a variable into the model
+\end{enumerate}
 
-The power and elegance of the subgrid concept is now also proving itself for the hydrological processes in the subsoil. The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}. Coupling the 2D grid with 1D channels and controllable structures enables greater detail in civilized regions.
+To reduce the number of errors a template system was introduced to generate the code used to allocate,  deallocate, and expose the variables. The model engine is compiled as a shared library with \emph{C} compatible external functions.
 
+The power and elegance of the subgrid concept is now also proving itself for the hydrological processes in the subsoil. The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}.
+
+
+To enable the steering of the water systems the 2D grid was extended 1D channels and controllable structures (for example pumps, orifices, weirs) which enables a representation of water systems in civilized regions.
 
 Another important influence on potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
 \[
 \Delta V_\mathrm{surface\ water}=(Q_\mathrm{overland} + Q_\mathrm{precipitation} - Q_\mathrm{infiltration} - Q_\mathrm{evapo(transpi)ration} + Q_\mathrm{drainage})\cdot\Delta t
 \]
-Infiltration, evaporation and drainage are now also evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance.
+Infiltration, evaporation and drainage are now also evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance. The heterogeneous landscape and land use (be it it urban and/or rural) are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance and maximum infiltration. Consider the basic head-dependent linear infiltration in (\ref{eq:qinf}), where $\zeta_\mathrm{sw}$ and $h_\mathrm{gw}$ are surface and ground water level, respectively, and $d_{i,j}$ is the surface/bed level of pixel $(i,j)$. Notice how dry pixels (higher land) do not amount to the total infiltration. This specific type of head-dependent infiltration rate can be chosen freely. The major advancement here is the pixel-resolution soil characteristics.
 
-The heterogeneous landscape and land use (be it it urban and/or rural) are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance and maximum infiltration. Consider the basic head-dependent linear infiltration in (\ref{eq:qinf}) as an example.
-%
 \begin{equation}
 \label{eq:qinf}
 Q_\mathrm{infiltration}= \sum_{\mathrm{pixels}\ i,j} \frac{\min(0, \zeta_\mathrm{sw}-\max(h_\mathrm{gw}, d_{i,j}))}{\mathrm{resistance}_{i,j}}\Delta x_p \Delta y_p,
 \end{equation}
-where $\zeta_\mathrm{sw}$ and $h_\mathrm{gw}$ are surface and ground water level, respectively, and $d_{i,j}$ is the surface/bed level of pixel $(i,j)$. Notice how dry pixels (higher land) do not amount to the total infiltration.
 
 
-Note that this specific type of head-dependent infiltration rate in can be chosen freely, but the fact that it uses pixel-resolution soil characteristics is what is important here.
+These advances in the numerical model allow the model to act as a component in the interactive web-based model environment with a wide variety of possible applications.
 
-
-These advances in the numerical model allow the model to act as a component in the interactive web-based model environment that will be described in the next section.
 
 \section{Architecture}
-\begin{wrapfigure}[12]{l}{0.5\textwidth}
+Now that a numerical model is available that allows high resolution interactive modelling, how can we hook it up to a tablet, mobile phone and map table, all at the same time, to allow for social and interactive modeling.
+
+To enable such an environment the most logical choice is to use a web based environment. Over the last years this choice has become more apparent. The large list of browser enhancements (for example inline \ac{SVG}, canvas, plugin free video \citep{Berjon2014} and \ac{CSS} animations \citep{Jackson2013}) allow for rich visualizations independent of the device type.
+
+An overview of the system architecture is given in \autoref{fig:arch}. The architectural follows the general ``Model View Controller'' pattern \citep{Gamma1994} with caching of events and data to accommodate for the model continuously running in the background. The implementation of this system required several technical innovations and social considerations.
+
+\begin{wrapfigure}[9]{r}{0.5\textwidth}
   \centering
-  \includegraphics[width=0.48\textwidth]{architecture}
+  % \vspace{-20pt}
+  \includegraphics[width=0.48\textwidth]{arch}
   \caption{Architecture overview}
   \label{fig:arch}
 \end{wrapfigure}
 
-To enable social and interactive modeling through a map environment the most logical choice was to use a web based environment. Over the last years this choice has become easier. The large list of browser enhancements (for example inline \ac{SVG}, canvas, plugin free video \citep{Berjon2014} and \ac{CSS} animations \citep{Jackson2013}) allow for rich visualizations. An overview of the architecture is given in \autoref{fig:arch}. Notice how the architectural follows the general Model View Controller pattern \citep{Gamma1994}. On a high level the architecture follows is classic. In this section we will describe the lower level, yet important,  technical innovations that made the application of this architecture successful.
+The end-users, interact with the web based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example manholes can only be placed inside the model domain, and can be controlled by only two different discharge settings (normal and extreme discharge) (see \autoref{fig:twod}). Sessions with groups of end-users resulted in the idea that this interface was the most usable. The design goals of providing freedom to explore together with high resolution high frequency model output, yet without the insinuation that the model results are ``true'' proves to be challenging. Many end-users confuse high resolution, detailed tuning parameters and higher frequency results with higher accuracy.
 
-\begin{wrapfigure}[16]{r}{0.5\textwidth}
-  \centering
-  \includegraphics[width=0.48\textwidth]{webgui}
-  \caption{Web \ac{GUI}}
-  \label{fig:gui}
-\end{wrapfigure}
-
-The end-users, interact with the web based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example manholes can only be placed inside the model domain, and can be controlled by only two different discharge settings (normal and extreme discharge). Sessions with groups of end-users resulted in the idea that this interface was the most usable. The design goals of providing freedom to explore together with high resolution high frequency model output, yet without the insinuation that the model results are ``true'' proves to be challenging. Many end-users confuse high resolution, detailed tuning parameters and higher frequency results with higher accuracy.
-
-Several challenges arise when preparing a model for a web-based use. One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website as a whole searching for a new ``frisson'' \citep{Carr2011}.
+One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website, searching for a new ``frisson'' \citep{Carr2011}.
 
 To make sure that the model is ready to run when a user arrives and no time is lost with starting up, initializing, reading files a lot of attention is given to the provisioning of the model. Provisioning in this context is preparing a model controller so that it starts it's computation on request. Machines are prepared and put on hold at one of the \ac{IaaS} providers (such as Amazon). These machines are prepared with a container that contains the model schematization, tables and grids and hot restart files. The tables, grids and restart files are read into memory so that the model is ready to start its computation when it is needed. This results in a time between a user logging in and a model start below 5 seconds.
 
-Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice she expects a response within a second. This short feedback loop is achieved using several techniques. Using the regular \ac{HTTP} GET Request is too slow in this case. To reduce communication we use a chain of direct connections. This starts with a websocket \citep{w3c2010} connection between the message broker and the browser. The model controller gets notified directly of user interactions. These interactions are collected in a separate thread and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run. A timestep resulting in a computation time of \si{100}{\mili\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these events and can directly visualize the results. This message broker approach allows interactions with a feedback time in the order of \si{100}{\mili\second}, which gives a good sense of interactivity.
+To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a}. This protocol is suitable for sending model variables over the internet. A model message consists of a metadata header in \ac{JSON} format, optionally followed by bytes. Listing \ref{lst:mmi} shows an example of an \ac{MMI} message. In this project the \ac{0MQ} protocol is used as a the underlying transport protocol. The advantage of using the \ac{MMI}, \ac{0MQ} combination is that it has flexible metadata, does not copy data and it is very fast.
 
-As a final challenge there is the social aspect of modeling. Several group sessions with different settings have been tried. The current setup is that the model is run in a channel, like in a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler was present in the session.
+\begin{lstlisting}[caption=MMI message,label=lst:mmi]
+# The first part of the message contains metadata
+{
+  "name": "waterlevel",
+  "shape": [3,3],
+  "dtype": "float64",
+  "attributes": {
+       "standard_name": "sea_surface_altiude",
+       "units": "m"
+  }
+}
+# The second part of the message contains bytes
+\x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
+\end{lstlisting}
 
-\subsection{Data sources }
-\begin{itemize}
-  \item lidar
-  \item rain example
-  \item structures/levees
-\end{itemize}
+Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. To reduce communication we use a chain of direct connections. This starts with a websocket \citep{Hickson2012} with the browser. The model controller gets notified directly of user interactions. These interactions are collected in a separate cache and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run. A timestep resulting in a computation time of \si{100}{\mili\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these events and can directly visualize the results. This message broker approach allows interactions with a feedback time in the order of \si{100}{\mili\second}, which gives a good sense of interactivity.
 
-\section{Coupling}
-\label{sec:coupling}
+The social aspect of modeling is another aspect where interesting problems occur. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like in a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler was present in the session.
 
-\begin{itemize}
-  \item raster
-  \item quad unstructured
-  \item 1d network
-  \item structure tables
-\end{itemize}
-
-\subsection{BMI}
-
-Basic Model Interface Wrapper
-The \ac{BMI} is a low level API designed access both control and data access functions of the model engine component. It is similar to the type introspection used in many programming languages, however, instead of the class types \ac{BMI} provides access to the model variables, including their attributes such as data type, unit of measure, input or output role. To provide full access to the internals of the internal model state the following function types should be implemented: model control, model information, variable information, variable getter and setter and grid information. The \ac{BMI} API is quite compact and does not require much effort to implement it in the model. However, it can be quite time consuming to continuously extend access to the model variables in programming languages such as fortran. To simplify this maintenance process we have implemented an automated way to add or remove model variables via \ac{BMI}. The automation was added using Python script and Mako template engine (Figure 1).
-
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=10cm]{bmi_3di}
-  \caption{Basic Model Interface template}
-  \label{fig:bmi}
-\end{figure}
-
-Figure 1: Automatic generation of the include files for \ac{BMI} support
-
-The Mako template files used to generate FORTRAN include all code necessary to expose all required external functions of the model engine shared library. This library is then used by the 3Di model wrapper (developed using Python and ctypes) to control model.
-
-The approach described above significantly decreased costs of change required to maintain \ac{BMI} support in the 3Di model.
-
-Additionally to the standard functions we had to extend BMI with support for simple compound data types (C structures using only simple fields). This was necessary to simplify access to the higher level model entities such as hydraulic structures (e.g. pumps, weirs, culverts).
-
-\subsection{MMI}
-\begin{itemize}
-  \item message interface
-  \item serialization
-  \item comparison to other interfaces
-\end{itemize}
-\subsection{Websockets}
-\begin{itemize}
-  \item Advantages of push for models
-  \item Serialization
-\end{itemize}
 \section{Visualization}
-\subsection{Ravensburger }
-\begin{itemize}
-  \item performance comparison
-  \item WMS/TWMS coupling
-\end{itemize}
-\subsection{Interpolation}
-Interpolation Martijn
+The 3Di platform serves a wide variety of end-users. It is important to find a good balance between what is computed and how information is perceived. For scientific or engineering users one wants to provide information as close to the model results as possible. For less experienced end users it becomes important that the information is perceived correctly rather than that it is presented correctly.
 
-The 3Di platform enables a more exploratory approach to modeling, serving a wide variety of end-users. The variety of end-users exposes the numerical model to non-technical users with little understanding of implemented numerical schemes. Some artefacts resulting from the numerical schemes are therefore filtered and smoothed using an interpolation method. Artefacts include squared water depth visualization and water present on two sides of a levee within one calculation cell. The filtering and smoothing reduces the need for prior knowledge of numerical modeling.
+First a note about the performance. Humans will detect images at a rate of about \si{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \si{50}{\mili\second}. Generating results at this framerate can be done using two approaches. The first is to reduce the timestep so that it computes in less than \si{50}{\mili\second}. This is the only way to get true model results at this framerate. An alternative is to interpolate in time and provide the insinuation of continuous information. We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
 
-The numerical core of the 3Di platform is based on a subgrid calculation method (Stelling, 2012). The hydrodynamic calculations are performed on a non-uniform grid (quadtree ordering), with use of high resolution \ac{DEM} information as input. Flow variables, such as water levels and flow velocities, are available on the calculation grid, which reduces storage costs. The resulting adaptive storage of flow variables results in artefacts after plotting them on the high resolution \ac{DEM} rasters. Figure 1a shows the occurring artefacts.
+Another performance technique used to achieve the high framerate is to use the \emph{Mahlen nach Zahlen} method, a reference to a product from the German company Ravensburger~\textregistered. A map with cell numbers is prepared in advance. Once a quantity for a new timestep becomes available the map is filled in with the colors corresponding to the cell numbers. This achieves much faster rendering times than drawing the cells a geometry drawing function.
 
-
-\begin{figure}[h]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{artifacts_a}
-  \caption{Interpolation method}
-  \label{fig:artifacts_a}
+
+  \begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=1\textwidth]{webgui}
+    \caption{Representation of two dimensional subpixels water level}
+    \label{fig:twod}
+  \end{subfigure}
+  \begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=1\textwidth]{oned}
+    \caption{Representation of one dimensional channel network using an animated stroke pattern.}
+    \label{fig:oned}
+  \end{subfigure}
+  \label{fig:gui}
+  \caption{Browser based interactive model user interface of \threedi}
 \end{figure}
 
-\begin{figure}[h]
+The variety of end-users exposes the numerical model to non-technical users with little appreciation of implemented numerical schemes. Some artifacts from the numerical schemes result in confusion for end users. The world in the subgrid model is internally represented in voxels, not unlike the computer game Minecraft. This results in visual artifacts as represented in \autoref{fig:arta}. In terrains with steeper slopes the raw model output results in a rice field like pattern. Another type of artifact occurs when a levee crosses a calculation cell both sides of the cell will contain water.
+
+One can argue whether to show these ``true'' yet confusing results or to process the information so that is perceived as intended. In the \threedi platform the default visualization hides these results by filtering and smoothing the output. Hiding the square world is implemented using different techniques.
+
+\begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.5\textwidth]{artifacts_b}
+  \begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=1\textwidth]{arta}
+    \caption{Uninterpolated subgrid water level}
+
+    \label{fig:arta}
+  \end{subfigure}
+  \begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=1\textwidth]{artb}
+    \caption{Interpolated subgrid water level}
+    \label{fig:artb}
+  \end{subfigure}
+
+  \label{fig:artifacts}
+
   \caption{Interpolation method}
-  \label{fig:artifacts_b}
+
 \end{figure}
 
-Figure 1a.  Artefacts in the visualization                      Figure 1b.  Filtered visualization
+A barycentric linear interpolation technique is selected for filtering artefacts on the subgrid level. This is one of the few techniques that allow for the interpolation within the rendering time constrain. Second, the ability to interpolate water level results on an arbitrary grid. The quad tree calculation grid is triangulated using Qhull \citep{Barber1996}, creating a triangulated mesh.  Water level information is present on cell centers and is then linearly interpolated to the underlying subgrid. The interpolation uses a weighted average the determine water levels on the subgrid. Defining the triangular mesh can be done and reused with new values.  Results of plotting water depths after the barycentric linear interpolation are shown in \autoref{fig:artb}.
 
-A barycentric linear interpolation technique is selected for filtering artefacts on the subgrid level, because of two main restrictions. First, the web visualization requires a 50 ms rendering time in the browser that is still obtained using this method. Second, the ability to interpolate water level results on an arbitrary grid. The quadtree calculation grid was triangulated from the cell centers using existing software libraries, creating a triangulated mesh (Figure 2b). Water level information is present on cell centers and is then linearly interpolated to the underlying subgrid. The interpolation uses a weighted average the determine water levels on the subgrid. The determination of the triangular mesh is very low cost after which the interpolation can be executed immediately. The little calculation steps needed result in high performance. This technique has a large upside in calculation time compared to a technique using cell corners as interpolation points. When using cell corners, an extra intermediate calculation has to be made to determine water levels at cell corners. After the extra calculation the interpolation is executed. Results of plotting water depths after the barycentric linear interpolation are shown in Figure 1b.
-
-The triangulation within the linear barycentric interpolation also allows us to filter levee artefacts of the numerical model .The calculation grid incorporates the function of a levee in the numerical schemes. However it disregards the actual position of such a levee within a calculation cell. The triangulation can reconstruct levees with use of additional levee geometries. A triangle is one of the simplest geometrical forms and can be used reconstruct any arbitrary shape (Welch and Witkin, 1994). To incorporate the levee in the trianglulation, the levee and grid geometries are intersected (Figure 2a). For the intersected calculation cells the influential water level points are determined and coupled to the relevant calculation areas. The arrows in figure 2a indicate which water level is relevant for the dike intersected cell areas. When all waterlevel points are allocated to the dike, the triangulation can be executed with the incorporation of the levee geometries. The newly created triangular mesh now also follows the added levee geometry. Successively the interpolation is executed, resulting in water being retained behind the dike within one calculation cell. The interpolated result is shown in Figure 2b.
-
-
-
-\begin{figure}[h]
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{interpolationlevees3}
-  \caption{Interpolation method}
-  \label{fig:interp_a}
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1\textwidth]{levees1}
+    \caption{Redistribution of cell sections based on levee positioning.}
+    \label{fig:levee1}
+  \end{subfigure}
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1\textwidth]{levees2}
+    \caption{Interpolated subgrid water level with levee constrained}
+    \label{fig:levee2}
+  \end{subfigure}
+  \label{fig:levees}
+
+  \caption{Levee-constrained interpolation method}
+
 \end{figure}
 
-Figure 2a. Levee and grid geometry intersections        Figure 2b. Levee incorporated interpolation
-
-Reference:
-Welch, W. Witkin, A. Free-Form Shape Design Using Triangulated Surfaces, Proceeding SIGGRAPH '94 Proceedings of the 21st annual conference on Computer graphics and interactive techniques, Pages 247-256, 1994
-Stelling, G.S. Quadtree flood simulations with sub-grid digital elevation models, Proceedings of the ICE - Water Management, Volume 165, Issue 10, 01 November 2012, pages 567 –580
-
-http://quietplease.com/home/tri.pdf
-
-\section{Limitations: \emph{All}}
-Several other models use similar approaches, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the UnTRIM research package \citet{Casulli2000}. UnTRIM uses fully unstructured grids as opposed to the quad tree grids used here. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow. In the accompanying MIKE-SHE all relevant vertical hydrological processes are offered, also with some degree of subgrid-information for the infiltration part.
+The triangulation within the linear barycentric interpolation also allows us to filter levee artefacts of the numerical model. The calculation grid incorporates the function of a levee in the numerical schemes. However it disregards the actual position of such a levee within a calculation cell. The triangulation can reconstruct levees with use of additional levee geometries. A triangle is one of the simplest geometrical forms and can be used reconstruct any arbitrary shape \citep{Welch1994}. To incorporate the levee in the trianglulation, the levee and grid geometries are intersected (\autoref{fig:levee1}). For the intersected calculation cells the influential water level points are determined and coupled to the relevant calculation areas. The arrows in \autoref{fig:levee1} indicate which water level is relevant for the dike intersected cell areas. When all waterlevel points are allocated to the dike, the triangulation can be executed with the incorporation of the levee geometries. The newly created triangular mesh now also follows the added levee geometry. Successively the interpolation is executed, resulting in water being retained behind the dike within one calculation cell. The interpolated result is shown in \autoref{fig:levee2}.
 
 
 
-\section{Future plans: \emph{All}}
-In that respect, combining the subgrid approach with our own unstructured flow solver Delft3D-FLOW Flexible Mesh \citep{Kernkamp2011} which is already equipped with an interactive BMI-interface) is a logical future step.
-\section{Conclusions: \emph{Fedor}}
+\section{Discussion and conclusion}
+Several other models use a similar numerical approach, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the UnTRIM research package \citet{Casulli2000}. UnTRIM uses fully unstructured grids as opposed to the quad tree grids used here. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow. In the accompanying MIKE-SHE all relevant vertical hydrological processes are offered, also with some degree of subgrid-information for the infiltration part.
 
+The major advancement here is to redesign the numerical engine into a component that allows for external control and introspection. By combining this numerical model with the technical advancements described in this paper, we have enabled interactive web-based modeling at a high resolution and wide coverage.
 
+Possible future directions include combining the subgrid approach with an unstructured flow solver, such as Delft3D-FLOW Flexible Mesh \citep{Kernkamp2011}. The pixel based approach has the advantage that it is simple to implement and to scale. Unfortunately the world is not so square, especially not on larger scales, when one goes beyond the scale of a small country.
 
+Another planned step is to incorporate or preferably to couple the system with other physical models. The monolithic approach of putting all processes into one model has proven cumbersome in previous implementations. The current model controller can easily incorporate other models because the communication and control are already out of the model engine. Water quality, coastal and socio-economic models are possible candidates for inclusion in the platform.
+
+Viewing model results through the web is already a reality (see \citep{Blower2013} for example), many model centers around the world provide their results through readily available maps and plots. We have made progress to run and interact with models through the browser. What is not available, for complex models, is the ability to set up a new model through the web. At the moment it is still cumbersome to implement this functionality. However within the next few years it is likely that also this part of the modeling workflow will become browser-based.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{iemss}
 \bibliography{bibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\section*{Acronyms}
 \begin{acronym}[AAAAA]
 \acro{CSS}{Cascading Style Sheets}
+\acro{MMI}{Model Message Interface}
+\acro{JSON}{JavaScript Object Notation}
+\acro{0MQ}[\O{}MQ]{Zero Message Queue}
 \acro{SVG}{Scalable Vector Graphics}
 \acro{H2O}[$\mathrm{H_2O}$]{water}
 \acro{BMI}{Basic Model Interface}
