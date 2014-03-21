@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,arrows,shadows,positioning,backgrounds,fit} %,external
+%\tikzexternalize
+\usepackage[active,pdftex,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\begin{document}
+\sffamily
+\pagestyle{empty}
+\renewcommand{\rmdefault}{phv} % Arial
+\renewcommand{\sfdefault}{phv} % Arial
+
+\tikzstyle{component} = [diamond, draw,text badly centered,inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw,text centered, rounded corners,minimum size=1cm]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse]
+\tikzstyle{nodeEdge} = [black,thick,->];
+\tikzstyle{nodeBi} = [black,thick,<->];
+
+\def\blockdist{2.3}
+
+\begin{tikzpicture}[text width=6em,auto]
+
+    % Place nodes
+    \node [block] (core) {numerical engine};
+    \node [block] (controller) [right=0.5cm of core] {model controller};
+    \node [block] (schema) [below=0.5cm of core] {schematization};
+    \node [block] (feed) [above=1cm of controller] {data feed};
+    \node [block] (broker) [below right=0cm and 0.5cm of controller] {event+action\\ cache};
+    \node [block] (cache) [above right=0cm and 0.5cm of controller] {data cache};
+    \node [block] (maps) [right=0.5cm of cache] {time+map \\ server};
+    \node [block] (sockets) [right=0.5cm of broker] {websocket server};
+    \node [block] (browser) [below right=0 cm and 1cm of maps] {browser};
+
+    % Connections
+    \draw ($(schema.north)$) edge[nodeEdge] ($(core.south) $);
+    \draw ($(core.east) $) edge[nodeBi] ($(controller.west)$);
+    \draw ($(feed.south) $) edge[nodeEdge] ($(controller.north)$);
+    \draw ($(feed.south) $) edge[nodeEdge] ($(controller.north)$);
+    \draw ($(controller.north) $) edge[nodeEdge,out=90,in=180] ($(cache.west)$);
+    \draw ($(controller.south) $) edge[nodeBi,out=270,in=180] ($(broker.west)$);
+    \draw ($(cache.east) $) edge[nodeEdge] ($(maps.west)$);
+    \draw ($(broker.east) $) edge[nodeBi] ($(sockets.west)$);
+    \draw ($(maps.east) $) edge[nodeEdge,out=0,in=90] ($(browser.north)$);
+    \draw ($(sockets.east) $) edge[nodeBi,out=0,in=270] ($(browser.south)$);
+
+
+\end{tikzpicture}
+\end{document}
