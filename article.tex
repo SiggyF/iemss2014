@@ -168,7 +168,7 @@ where $\zeta_\mathrm{sw}$ and $h_\mathrm{gw}$ are surface and ground water level
 
 Note that this specific type of head-dependent infiltration rate in can be chosen freely, but the fact that it uses pixel-resolution soil characteristics is what is important here.
 
-%
+
 These advances in the numerical model allow the model to act as a component in the interactive web-based model environment that will be described in the next section.
 
 \section{Architecture}
@@ -179,7 +179,7 @@ These advances in the numerical model allow the model to act as a component in t
   \label{fig:arch}
 \end{wrapfigure}
 
-To enable social and interactive modeling through a map environment the most logical choice was to use a web based environment. Over the last years this choice has become easier through the large list of advancements for browser based applications.  An overview of the architecture is given in \autoref{fig:arch}. Notice how the architectural follows the general Model View Controller pattern \citep{GOF2004}. On a high level the architecture follows is classic. In this section we will describe the lower level, yet important,  technical innovations that made the application of this architecture successful.
+To enable social and interactive modeling through a map environment the most logical choice was to use a web based environment. Over the last years this choice has become easier. The large list of browser enhancements (for example inline \ac{SVG}, canvas, plugin free video \citep{Berjon2014} and \ac{CSS} animations \citep{Jackson2013}) allow for rich visualizations. An overview of the architecture is given in \autoref{fig:arch}. Notice how the architectural follows the general Model View Controller pattern \citep{Gamma1994}. On a high level the architecture follows is classic. In this section we will describe the lower level, yet important,  technical innovations that made the application of this architecture successful.
 
 \begin{wrapfigure}[16]{r}{0.5\textwidth}
   \centering
@@ -316,6 +316,8 @@ In that respect, combining the subgrid approach with our own unstructured flow s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{acronym}[AAAAA]
+\acro{CSS}{Cascading Style Sheets}
+\acro{SVG}{Scalable Vector Graphics}
 \acro{H2O}[$\mathrm{H_2O}$]{water}
 \acro{BMI}{Basic Model Interface}
 \acro{API}{Application Programming Interface}
