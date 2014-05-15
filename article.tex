@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+
 \usepackage{iemss}
 \usepackage[pdftex]{graphicx}
 \usepackage[authoryear]{natbib}
@@ -7,7 +8,8 @@
 
 % extra packages not in the template
 % Don't color hyperlinks
-\usepackage{siunitx}
+
+
 \usepackage{wrapfig}
 \usepackage{paralist}
 \usepackage[draft]{hyperref}
@@ -17,6 +19,7 @@
 \usepackage{listings}
 \usepackage[list=true]{subcaption}
 
+\usepackage{siunitx}
 % \RequirePackage{lineno} % for line numbers
 
 \usepackage{color}
@@ -173,7 +176,7 @@ The planter size pixel resolution of the digital terrain maps for detailed evalu
 
 The power of the subgrid concept is also applied the hydrological processes in the subsoil. An important factor in potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
 \[
-\Delta V_\mathrm{surface\ water}&=(Q_\mathrm{overland} + Q_\mathrm{precipitation} - Q_\mathrm{infiltration} - Q_\mathrm{evaporation} + Q_\mathrm{drainage})\cdot\Delta t
+\Delta V_\mathrm{surface\ water} = (Q_\mathrm{overland} + Q_\mathrm{precipitation} - Q_\mathrm{infiltration} - Q_\mathrm{evaporation} + Q_\mathrm{drainage})\cdot\Delta t
 \]
 
 The heterogeneous landscape and land use are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance and maximum infiltration.  Infiltration, evaporation and drainage are evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance.
@@ -215,14 +218,14 @@ To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a
 \x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
 \end{lstlisting}
 
-Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly send through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \si{100}{\mili\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop gives a good sense of interactivity.
+Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly send through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop gives a good sense of interactivity.
 
 The social aspect of modeling is another aspect where interesting problems occur. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler, was present in the session.
 
 \section{Visualization}
 The \threedi platform serves a wide variety of end-users. It is important to find a good balance between what is computed and how information is perceived. For scientific or engineering users one wants to provide information as close to the model results as possible. For less experienced end users it becomes important that the information is perceived correctly rather than that it is presented correctly.
 
-First a note about the performance. Humans will detect images at a rate of about \si{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \si{50}{\mili\second}. Generating results at this framerate can be done using two approaches. The first is to reduce the timestep so that it computes in less than \si{50}{\mili\second}. This is the only way to get true model results at this framerate. An alternative is to interpolate in time and provide the insinuation of continuous information. We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
+First a note about the performance. Humans will detect images at a rate of about \SI{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \SI{50}{\milli\second}. Generating results at this framerate can be done using two approaches. The first is to reduce the timestep so that it computes in less than \SI{50}{\milli\second}. This is the only way to get true model results at this framerate. An alternative is to interpolate in time and provide the insinuation of continuous information. We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
 
 Another performance technique used to achieve the high framerate is to use the \emph{Mahlen nach Zahlen} method, a reference to a product from the German company Ravensburger~\textregistered. A map with cell numbers is prepared in advance. Once a quantity for a new timestep becomes available the map is filled in with the colors corresponding to the cell numbers. This achieves much faster rendering times than drawing the cells using geometry drawing function.
 
@@ -236,6 +239,7 @@ Another performance technique used to achieve the high framerate is to use the \
   \end{subfigure}
   \begin{subfigure}{0.4\textwidth}
     \includegraphics[width=1\textwidth]{oned}
+
     \caption{Representation of one dimensional channel network using an animated stroke pattern.}
     \label{fig:oned}
   \end{subfigure}
@@ -302,7 +306,7 @@ Viewing model results through the web is already a reality (see \citep{Blower201
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{iemss}
-\bibliography{bibliography}
+\bibliography{./bibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{acronym}[AAAAA]
 \acro{CSS}{Cascading Style Sheets}

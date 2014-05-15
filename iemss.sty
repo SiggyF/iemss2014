@@ -22,7 +22,7 @@
 \evensidemargin  0mm              % Left margin on even-numbered pages.
 
 % VERTICAL SPACING:
-\topmargin      25mm              % Nominal distance from top of page to top
+\topmargin      1.25mm              % Nominal distance from top of page to top
                                   % of box containing running head.
 \headheight     13mm              % No running headline, and no
 \headsep        21pt              % space between running headline and text.
@@ -30,11 +30,10 @@
                                   % running footline and last line of text.
 
 % DIMENSION OF TEXT:
-\textheight 23.2cm                 % Height of text part of page
-\textwidth 13.65cm                  % Width of text part of page, i.e of line
-\textwidth 16.0cm                  % Width of text part of page, i.e of line
+\textheight 23.9cm                 % Height of text part of page
+\textwidth 15.75cm                  % Width of text part of page, i.e of line
 %\hoffset 0.5cm
-\hoffset 0.25cm
+\hoffset 0.45cm
 %\voffset 0.5cm
 \voffset 0.4cm
 
@@ -129,8 +128,8 @@
 \def\@IEMSSfirstHeader{
 \begin{flushright}{\footnotesize \sl
 International Environmental Modelling and Software Society (iEMSs)\\
-7th International Congress on Environmental Modelling and Software\\
-San Diego, California, USA, D.P. Ames, N. Quinn (Eds.)\\\vspace*{-1mm}
+7th Intl. Congress on Env. Modelling and Software\\
+San Diego, California, USA, Daniel P. Ames, Nigel W. T. Quinn, Andrea E. Rizzoli (Eds.)\\\vspace*{-1mm}
 http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \end{flushright}
 }
@@ -142,7 +141,7 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \newbox\fm@box                    % Box to capture front-matter in
 \def\@maketitle{%                 % Actual formatting of \maketitle
   \global\setbox\fm@box=\vbox\bgroup
-\vspace*{-4cm}
+\vspace*{-2.5cm}
 \thispagestyle{empty}
 \@IEMSSfirstHeader
     \vskip 8mm                    % 930715: 8mm white space above title
@@ -151,10 +150,8 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
     {\centering\rmfamily\fontsize{18pt}{20}\bfseries\selectfont\@title\par} % Title set in larger font. CENTERED
     \vskip\@bls                   % One line of vertical space after title.
     {\centering{\bf\normalsize        % each author set in the normal CENTERED
-    \@author}\\
-  % \par                 % typeface size
-    % \vskip
-   \@bls                   % One line of vertical space after author(s).
+    \@author} \par                 % typeface size
+    \vskip\@bls                   % One line of vertical space after author(s).
     \@address                     % all addresses
     \vskip 1cm}
   \egroup
@@ -203,7 +200,7 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \def\abstract{%
   \global\setbox\abstract@box=\vbox\bgroup
   \normalsize\rm
-  \ignorespaces{\bf{\abstractname :}}}
+  \ignorespaces{\bf{\abstractname}}}
 \def\endabstract{\par \egroup}
 
 % KEYWORDS
@@ -301,9 +298,9 @@ http://www.iemss.org/society/index.php/iemss-2014-proceedings}
 \emergencystretch=1pc           % (with 1 pc extra for emergencies),
 \flushbottom                    % and pages of equal length
 
-\oddsidemargin 2.5mm
-\evensidemargin 0.9mm
-\topmargin      0mm
+\oddsidemargin -4mm
+\evensidemargin -4mm
+\topmargin      -15mm
 \headheight     0mm
 \headsep        1cm
 
