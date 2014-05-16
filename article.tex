@@ -134,10 +134,10 @@ For the prediction of these flooding hazards requires a numerical model that rep
 
 These challenges arise from the movement towards more modern working methods and the ever increasing data volumes. The working methods are changing on different aspects.
 \begin{itemize}
-\item \emph{Mono-disciplinary versus integrated} Models used to be created by one or few people working in the same discipline. The challenge now is to model the integrated environment, which can best be approached as a community \citep{Voinov2010} of different disciplines.
-\item \emph{Confirmatory versus exploratory} From assuming that the model is valid and can be used for hypothesis testing to realizing it's a made-up simplification of reality \citep{Oreskes1994} that can be used to explore possibilities.
-\item \emph{Passive versus interactive} Moving from the pre-processing, wait a few hours, post-processing cycle towards a millisecond feedback loop with high resolution and connected physical processes. The challenge here is to move from the scale of a square kilometer \citep[for example][]{Losasso2008} to the scale of small country.
-\item \emph{Solitary versus social} The solitary modeler creating static pictures for a 600 page report describing all the different scenarios to a group of stakeholders in control \footnote{preferably with guidance from domain experts} of a model running simultaneous on their mobile devices and a big screen in the control room.
+\item \emph{Mono-disciplinary versus integrated:} Models used to be created by one or few people working in the same discipline. The challenge now is to model the integrated environment, which can best be approached as a community \citep{Voinov2010} of different disciplines.
+\item \emph{Confirmatory versus exploratory:} From assuming that the model is valid and can be used for hypothesis testing to realizing it's a made-up simplification of reality \citep{Oreskes1994} that can be used to explore possibilities.
+\item \emph{Passive versus interactive:} Moving from the pre-processing, wait a few hours, post-processing cycle towards a millisecond feedback loop with high resolution and connected physical processes. The challenge here is to move from the scale of a square kilometer \citep[for example][]{Losasso2008} to the scale of small country.
+\item \emph{Solitary versus social:} The solitary modeler creating static pictures for a 600 page report describing all the different scenarios to a group of stakeholders in control \footnote{preferably with guidance from domain experts} of a model running simultaneous on their mobile devices and a big screen in the control room.
 \end{itemize}
 
 The amount of data involved in preparing the model is rapidly increasing. There is an increase in supply of data caused by the ever growing measurement resolution and spatial coverage. For example, the topology of waterbodies at a spatial coverage of a small country is used to determine if the water will find its way into one's neighborhood. The topography and infiltration rate at a spatial resolution of a planter determine if the water will flow to one's backyard or the neighbors. How can we design a platform that is suitable for this new modeling approach and meets the corresponding challenges?
@@ -182,9 +182,9 @@ In several workshops, model coupling frameworks \citep[see][for an overview]{Jag
 
 In between these interface calls, the model state may be changed from outside and the core should support that. The library is loaded and can serve as a running process for a long time. A positive side-effect of implementing this interface is that it reveals subtle inconsistencies in existing code, for example initializing different models after one another: incomplete cleanup of previous settings, already allocated memory, unclosed file pointer all become apparent. To reduce the number of errors a template system was introduced to generate the code used to allocate, deallocate, and expose the variables.
 
-The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}. To represent water systems in civilized regions the 2D grid was extended 1D channels and controllable structures (for example pumps, orifices, weirs). This allows for more realistic and interactive overland flooding simulation.
+The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}. To represent water systems in civilized regions the 2D grid was extended with 1D channels and controllable structures (for example pumps, orifices, weirs). This allows for more realistic and interactive overland flooding simulation.
 
-The power of the subgrid concept is also applied the hydrological processes in the subsoil. An important factor in potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
+The power of the subgrid concept is also applied to the hydrological processes in the subsoil. An important factor in potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
 \[
 \Delta V_\mathrm{surface\ water} = (Q_\mathrm{overland} + Q_\mathrm{precipitation} - Q_\mathrm{infiltration} - Q_\mathrm{evaporation} + Q_\mathrm{drainage})\cdot\Delta t
 \]
@@ -207,11 +207,11 @@ To enable such an environment the most logical choice is to use a web-based envi
   \label{fig:arch}
 \end{wrapfigure}
 
-The end-users, interact with the web-based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example discharge locations only have two options (normal and extreme discharge) (see \autoref{fig:twod}). Sessions with groups of end-users resulted in this design that provides freedom to explore without the insinuation that the model results are ``true''.
+The end-users, interact with the web-based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example discharge locations only have two options (normal and extreme discharge) (see \autoref{fig:twod}). Sessions with groups of end-users resulted in this design that provides freedom to explore without the insinuation that the model results are ``true''. The application of \ac{CSS} and \ac{SVG} allows the interface to scale between different screen resolutions so that it can be used on different devices (phones, tablets, browsers, map table).
 
 One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website, searching for a new ``frisson'' \citep{Carr2011}. To make sure that the model is ready to run when a user arrives a lot of attention is given to the provisioning of the model. Provisioning, in this context, is preparing a model controller so that it starts its computation on request. Machines are prepared and put on hold at one of the \ac{IaaS} providers (such as Amazon). These machines are prepared with a container that contains the model schematization, tables and grids, and hot restart files. These files are read into memory so that the model is ready to start its computation when needed, resulting in a time between a user logging in and a model start in under 5 seconds.
 
-To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a}. This protocol is suitable for sending model variables over the internet. A model message consists of a metadata header in \ac{JSON} format, optionally followed by bytes. Listing \ref{lst:mmi} shows an example of an \ac{MMI} message. In this project the \ac{0MQ} protocol is used as a the underlying transport protocol. The advantage of using the \ac{MMI}, \ac{0MQ} combination is that it has flexible metadata, does not copy data is very fast.
+To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a}. This protocol is suitable for sending model variables over the internet. A model message consists of a metadata header in \ac{JSON} format, optionally followed by the serialized array. Listing \ref{lst:mmi} shows an example of an \ac{MMI} message. In this project the \ac{0MQ} protocol is used as a the underlying transport protocol. The advantage of using the \ac{MMI}, \ac{0MQ} combination is that it has flexible metadata, does not copy data, and is very fast.
 
 \begin{lstlisting}[caption=MMI message,label=lst:mmi]
 # The first part of the message contains metadata
@@ -224,18 +224,21 @@ To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a
        "units": "m"
   }
 }
-# The second part of the message contains bytes
+# The second part of the message contains a serialized array
 \x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
 \end{lstlisting}
 
-Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly send through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep the chain is inverted. The model pushes it's arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop gives a good sense of interactivity.
+Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly sent through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep, the chain is inverted. The model pushes its arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop supports user interactivity with the model.
 
-The social aspect of modeling is another aspect where interesting problems occur. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler, was present in the session.
+The social aspect is another source of interesting problems. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler, was present in the session.
 
 \section{Visualization}
 The \threedi platform serves a wide variety of end-users. It is important to find a good balance between what is computed and how information is perceived. For scientific or engineering users one wants to provide information as close to the model results as possible. For less experienced end users it becomes important that the information is perceived correctly rather than that it is presented correctly.
 
-First a note about the performance. Humans will detect images at a rate of about \SI{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \SI{50}{\milli\second}. Generating results at this framerate can be done using two approaches. The first is to reduce the timestep so that it computes in less than \SI{50}{\milli\second}. This is the only way to get true model results at this framerate. An alternative is to interpolate in time and provide the insinuation of continuous information. We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
+First a note about the performance. Humans will detect images at a rate of about \SI{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \SI{50}{\milli\second}.
+Generating results at this framerate can be done using two approaches. The first is to reduce the modeling timestep so that it computes in less than \SI{50}{\milli\second}. This is the only way to get true model results at this framerate.
+An alternative is to interpolate in time and provide the insinuation of continuous information.
+We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
 
 Another performance technique used to achieve the high framerate is to use the ``Mahlen nach Zahlen'' method, a reference to a product from the German company Ravensburger~\textregistered. A map with cell numbers is prepared in advance. Once a quantity for a new timestep becomes available the map is filled in with the colors corresponding to the cell numbers. This achieves much faster rendering times than drawing the cells using geometry drawing function.
 
@@ -257,9 +260,9 @@ Another performance technique used to achieve the high framerate is to use the `
   \caption{Browser based interactive model user interface of \threedi}
 \end{figure}
 
-The variety of end-users exposes the numerical model to non-technical users with little appreciation of implemented numerical schemes. Some artifacts from the numerical schemes result in confusion. The world in the subgrid model is internally represented in voxels, not unlike the computer game Minecraft. This results in visual artifacts, as represented in \autoref{fig:arta}. Another type of artifact occurs when a levee crosses a calculation cell both sides of the cell will contain water.
+The variety of end-users exposes the numerical model to non-technical users with little appreciation of implemented numerical schemes. Some artifacts from the numerical schemes result in confusion. The world in the subgrid model is internally represented in voxels (a picture element (pixel) with volume), not unlike the computer game Minecraft. This results in visual artifacts, as represented in \autoref{fig:arta}. Another type of artifact occurs when a levee crosses a calculation cell both sides of the cell will contain water.
 
-One can argue whether to show these ``true'' yet confusing results or to process the information so that is perceived as intended. In the \threedi platform the default visualization hides these artifacts by filtering and smoothing the output. Hiding the square world is implemented using different techniques.
+One can argue whether to show these ``true'' yet confusing results or to process the information so that it is perceived as intended. In the \threedi platform the default visualization hides these artifacts by filtering and smoothing the output. Hiding the square world is implemented using different techniques.
 
 \begin{figure}[htpb]
   \centering
@@ -274,10 +277,10 @@ One can argue whether to show these ``true'' yet confusing results or to process
     \label{fig:artb}
   \end{subfigure}
   \label{fig:artifacts}
-  \caption{Interpolation method}
+  \caption{Linear barycentric interpolation method}
 \end{figure}
 
-A barycentric linear interpolation technique is used. This is one of the few techniques that allow for the interpolation within the rendering time constraint. It also allows to interpolate water level results on an arbitrary grid. The quad tree grid is triangulated using Qhull \citep{Barber1996}.  Water level information, from the cell centers and is linearly interpolated to the underlying subgrid. The interpolation uses a weighted average the determine water levels. The triangular mesh can be reused.   \autoref{fig:artb} shows the results of this technique .
+A barycentric linear interpolation technique is used. This is one of the few techniques that allow for the interpolation within the rendering time constraint. It also allows water level results to be interpolated. The quad tree grid is triangulated using Qhull \citep{Barber1996}.  Water level information, from the cell centers is linearly interpolated to the underlying subgrid. The interpolation uses a weighted average to determine water levels. \autoref{fig:artb} shows the results of this technique .
 
 \begin{figure}[htbp]
   \centering
@@ -288,7 +291,7 @@ A barycentric linear interpolation technique is used. This is one of the few tec
   \end{subfigure}
   \begin{subfigure}{0.4\textwidth}
     \includegraphics[width=1\textwidth]{levees2}
-    \caption{Interpolated subgrid water level with levee constrained}
+    \caption{Interpolated subgrid water level with levee constraint}
     \label{fig:levee2}
   \end{subfigure}
   \label{fig:levees}
@@ -297,14 +300,14 @@ A barycentric linear interpolation technique is used. This is one of the few tec
 
 \end{figure}
 
-The triangulation within the linear barycentric interpolation also allows us to filter levee artefacts of the numerical model. The calculation grid incorporates the function of a levee in the numerical schemes. However it disregards the actual position of such a levee within a calculation cell. The triangulation can reconstruct levees with use of additional levee geometries. A triangle is one of the simplest geometrical forms and can be used reconstruct any arbitrary shape \citep{Welch1994}. To incorporate the levee in the trianglulation, the levee and grid geometries are intersected (\autoref{fig:levee1}). For the intersected calculation cells the influential water level points are determined and coupled to the relevant calculation areas. The arrows in \autoref{fig:levee1} indicate which water level is relevant for the dike intersected cell areas. When all waterlevel points are allocated to the dike, the triangulation can be executed with the incorporation of the levee geometries. The newly created triangular mesh now also follows the added levee geometry. Successively the interpolation is executed, resulting in water being retained behind the dike within one calculation cell. The interpolated result is shown in \autoref{fig:levee2}.
+The triangular mesh can be reused to filter levee artefacts. The triangulation can reconstruct levees with use of additional levee geometries. A triangle is the simplest geometrical form and can be used reconstruct any arbitrary shape \citep{Welch1994}. To incorporate the levee in the trianglulation, the levee and grid geometries are intersected (\autoref{fig:levee1}). For the intersected calculation cells the influential water level points are determined and coupled to the relevant calculation areas. The arrows in \autoref{fig:levee1} indicate which water level is relevant for the dike intersected cell areas. When all waterlevel points are allocated to the dike, the triangulation can be executed with the incorporation of the levee geometries. The newly created triangular mesh now also follows the added levee geometry. Successively the interpolation is executed, resulting in water being retained behind the dike within one calculation cell. The interpolated result is shown in \autoref{fig:levee2}.
 
 
 
 \section{Discussion and conclusion}
 Several other models use a similar numerical approach, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the UnTRIM research package \citet{Casulli2000}. UnTRIM uses fully unstructured grids as opposed to the quad tree grids used here. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow. In the accompanying MIKE-SHE all relevant vertical hydrological processes are offered, also with some degree of subgrid-information for the infiltration part.
 
-The major advancement here is to redesign the numerical engine into a component that allows for external control and introspection. By combining this numerical model with the technical advancements described in this paper, we have enabled interactive web-based modeling at a high resolution and wide coverage.
+The major advancement here is to redesign the numerical engine into a component that allows for external control and introspection. By combining this numerical model with the technical advancements described in this paper, we have enabled interactive web-based modeling at a high resolution and wide coverage. The use of modern web technologies allows the same interface to be used on a browser, a phone and on a map table.
 
 A lot of technical and numerical problems have been solved, but the methodological challenges of the new working methods are proving more difficult. An open issue is that end-users tend to confuse high resolution and higher frequency results with a high accuracy, a topic for further research.
 

@@ -1,0 +1,132 @@
+## Reviewer 1
+> Review:	Check for comma rules on all enumerations througout the paper,
+> put a comma before the last "and".
+
+serial commas used, it's/its fixed
+
+> Page 3, para 3:
+> "determines", "one's"
+
+determines-> determine
+one's ones used correctly
+
+> page 5, para 4:
+> put units after "12" and "50" (fps ?)
+Correct latex macro \si -> \SI used, fixes units throughout the paper
+
+> page 5, para 5:
+> "Malen nach Zahlen"
+
+Changed \emph to ``''
+
+
+## Reviewer 2
+> Review:	This paper describes the 3Di platform, a new overland flooding and hydrological model. The paper primarily discusses the model's software structure (authors call this "numerical model), architecture, and visualization techniques. The paper is divided into 3 primary sections corresponding to these categories.
+> 1. Typo - Section 2, Paragraph 7:
+> "To represent water systems in civilized regions the 2D grid was extended <<insert:with>> 1D channels"
+
+Changed
+
+> 2. Typo - S2, para 8:
+> "the subgrid concept is also applied <<insert:to>> the hydrological processes in the subsoil"
+
+Changed
+
+> 3. Typo - S2, para 9: oxford comma - drainage resistance, and maximum infiltration
+
+Serial commas applied consistently
+
+> 4. Missing discussion - S3, Para 1:
+> The author's answers to "how can we hook it up to a tablet, mobile phone and map table, all at the same time, to allow for social and interactive modeling", is to "use the web" based on the corresponding text. How is the web based approach adequate for tablets and mobile phones? There is no discussion regarding the use of these devices.
+
+Added in system description and in discussion.
+
+> 5. Typo - S3, para 4: "If no indication of progress is given for longer than two second<<insert:s>> users will start reloading"
+
+Units are fixed throughout the paper
+
+> 6. Bad reference - The reference to Baart 2014 is incomplete. There is no document, article or wbesite described. How does one access this content?
+DOI added to sourcecode of the python implementation.
+
+> 7. Confusion - What is the purpose of the "bytes" following the JSON in a model message? This is not described at all.
+Bytes replaced by serialized array.
+
+> 8. Typo - S3, para 5 "The advantage of using the MMI, 0MQ combination is that it has flexible metadata, does not copy data, <<insert:and>> is very fast.
+
+Changed.
+
+> 9. Typo - S3, para 6 "User interactions are directly <<change to:sent>> through websockets
+Changed.
+
+> 10. Typo - S3, para 6, "After a model timestep <<insert:,>> the chain is inverted.
+
+Changed
+
+> 11. Typo - S3, para 6, "This fast feedback loop <<change to:supports user interactivity with the model.>>
+
+Changed
+
+> 12. Revise - S3, para 7, "The social aspect of modeling is another aspect"
+
+The social aspect is another source of interesting problems.
+
+> 13. Clarify - S4, para 2, What are the units for the numbers in this paragraph? Are the milliseconds? seconds? The reader is left to infer the units. I guess they are probably milliseconds.
+
+Units fixed throughout the paper
+
+> 14. Explain - "The first is to reduce the timestemp so that it computes in less that 50."
+> Are you referring to the modeling timestep? Please clatify.
+
+Changed to modeling timestep
+
+> 15. S3, para 4 Define what a voxel is.
+
+Defined as a picture element (pixel) with volume.
+
+> 16. Typo - S3, para 6 "One can argue whether to show these 'true' yet confusing results or to process the information so that <<insert:it>> is perceived as intended."
+
+Changed
+
+> 17. Figure 4 & 5 captions - add the interpolation method type, e.g. barycentric...
+
+Changed
+
+> 18. Typo - S3, para 7, Revise third sentence to "Is also allows water level results to be interpolated."
+
+Changed to It...
+
+
+> 19. Typo - S3, para 7, "from the cell centers <<delete:and>> is linearly interpolated
+
+Changed
+
+> 20. Typo - S3, para 7, "uses a weighted average <<change:to>> determine water levels."
+
+Changed
+
+> 21. Revise - S3, para 8, "<<delete:The>> Triangulation with the barycentric <<moved:linear>> interpolation also allow us to
+
+The triangular mesh can be reused to filter levee artefacts. The triangulation can reconstruct levees with use of additional levee geometries.
+
+
+
+> 22. The conclusion is weak.
+
+> 23. Sections 2 and 3 seem to overlap. Both contain various aspects regaarding the software framework and architecture. The paper has not been cleanly organized.
+
+> 24. There is no discussion regarding the accuracy of the flood model itself. The paper primarily presents the software structure, features, and visualization capabilities.
+
+> 25. The authors briefly mention how 3Di supports collaboration. It would be nice to see more discussion.
+
+> 26. This paper appears to discuss both the 3Di modeling platform/framework and a new flooding/hydrological model. Does the flood model have a name?
+
+
+
+> 27. Typo: Section 1, After subtitles add ":"'s, for example "Mono-disciplinary versus integrated <<insert ":">>"
+
+Changed
+
+> 28. The discussion and relevance to cloud based modeling is very limited in this paper. There is only a brief mention of "IaaS" and "Amazon". It is unclear what has been tested and run using cloud computing techniques.
+
+> 29. There is no discussion from the abstract on how or if 3Di achieves "100 times faster than the previous approach". What is the previous approach? What performance evaluations have been conducted?
+
