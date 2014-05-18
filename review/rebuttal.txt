@@ -116,7 +116,11 @@ The triangular mesh can be reused to filter levee artefacts. The triangulation c
 
 > 24. There is no discussion regarding the accuracy of the flood model itself. The paper primarily presents the software structure, features, and visualization capabilities.
 
+
+
 > 25. The authors briefly mention how 3Di supports collaboration. It would be nice to see more discussion.
+
+
 
 > 26. This paper appears to discuss both the 3Di modeling platform/framework and a new flooding/hydrological model. Does the flood model have a name?
 

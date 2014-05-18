@@ -17,11 +17,11 @@
 \usepackage[draft]{hyperref}
 \usepackage{xcolor}
 % \hypersetup{
-%   colorlinks=true,
-%   citecolor=black,
-%   filecolor=black,
-%   linkcolor=black,
-%   urlcolor=blue
+% colorlinks=true,
+% citecolor=black,
+% filecolor=black,
+% linkcolor=black,
+% urlcolor=blue
 % }
 \urlstyle{same}
 \usepackage{amsmath}
@@ -122,7 +122,7 @@
 
 \end{abstract}
 \begin{keyword}
-interactive, overland flooding, web-based, modeling, hydrodynamic, social modeling
+  interactive, overland flooding, web-based, modeling, hydrodynamic, social modeling
 \end{keyword}
 
 \maketitle
@@ -142,20 +142,20 @@ These challenges arise from the movement towards more modern working methods and
 
 The amount of data involved in preparing the model is rapidly increasing. There is an increase in supply of data caused by the ever growing measurement resolution and spatial coverage. For example, the topology of waterbodies at a spatial coverage of a small country is used to determine if the water will find its way into one's neighborhood. The topography and infiltration rate at a spatial resolution of a planter determine if the water will flow to one's backyard or the neighbors. How can we design a platform that is suitable for this new modeling approach and meets the corresponding challenges?
 
-The \threedi  platform, in which these approaches and several new ones are applied, consists of a new overland flooding model (1D/2D) and a corresponding infrastructure that has been applied for interactive web-based modeling of rural and urban areas at coverages of \orderof(1000km2) at a resolution of \orderof(0.1m). Here we describe the advances in the numerical methods, architecture, and visualization techniques.
+The \threedi  platform, in which these approaches and several new ones are applied, consists of a new overland flooding model (1D/2D) and a corresponding infrastructure. This platform enables interactive web-based modeling of rural and urban areas at coverages of \orderof(1000km2) at a resolution of \orderof(0.1m). Here we describe the advances in the numerical model, architecture, and visualization techniques.
 
 \section{Numerical model}
 The computational core originates from components of the {SOBEK} 1D2D flooding software \citep{Stelling2006} with three major improvements: \begin{inparaenum}
 \item streamlining of the software to offer access to the memory of a running model,
 \item overland flow at subgrid scale and
-\item inclusion subsoil processes at subgrid scale.
-\end{inparaenum}
+\item inclusion subsoil processes at subgrid scale
+\end{inparaenum}.
 
 The traditional standalone flooding program and its integrated \ac{GUI} have been split into dedicated components. A core library combines all numerical algorithms. On top of this library a light-weight interface library exposes the \ac{API}. This interface is compiled as a shared library with \emph{C} compatible external functions. The core and \ac{API} offer powerful new functionality for direct and fast interaction using introspection (implemented using the \ac{BMI} and the Hollywood-principle.
 
 By introspection, the outside world (e.g., a Python-based website, a C\#-\ac{GUI}, a MATLAB-script) can examine model state at run time. More specifically: get current water levels and flow fields, current running state of water pumps, and other structures, active meteorological forcings.
 % Fix sentence
- Each of these state variables can just as easily be \emph{set} as they are \emph{get}. These functions are implemented in correspondence with the \ac{BMI} standard \citep{Peckham2013}. The \ac{API} exposes memory pointers to relevant model state variables. This is how the model directly `feels' and uses its new state.
+Each of these state variables can just as easily be \emph{set} as they are \emph{get}. These functions are implemented in correspondence with the \ac{BMI} standard \citep{Peckham2013}. The \ac{API} exposes memory pointers to relevant model state variables. This is how the model directly `feels' and uses its new state.
 
 \begin{enumerate}
 \item \textbf{variable = get(``name'')}: Return a variable from the model
@@ -173,25 +173,25 @@ In several workshops, model coupling frameworks \citep[see][for an overview]{Jag
 \end{enumerate}
 
 \begin{wrapfigure}[19]{r}{0.5\textwidth}
-\vspace{-30pt}
-\centering
-\includegraphics[width=0.48\textwidth]{subgrid_hydrology}
-\caption{Subgrid infiltration into heterogeneous landscape.}
-\label{fig:figure2}
+  \vspace{-30pt}
+  \centering
+  \includegraphics[width=0.48\textwidth]{subgrid_hydrology}
+  \caption{Subgrid infiltration into heterogeneous landscape.}
+  \label{fig:figure2}
 \end{wrapfigure}
 
-In between these interface calls, the model state may be changed from outside and the core should support that. The library is loaded and can serve as a running process for a long time. A positive side-effect of implementing this interface is that it reveals subtle inconsistencies in existing code, for example initializing different models after one another: incomplete cleanup of previous settings, already allocated memory, unclosed file pointer all become apparent. To reduce the number of errors a template system was introduced to generate the code used to allocate, deallocate, and expose the variables.
+In between these interface calls, the model state may be changed from outside and the core should support that. The library is loaded and can serve as a running process for a long time. A positive side-effect of implementing this interface is that it reveals subtle inconsistencies in existing code, for example initializing different models after one another: incomplete cleanup of previous settings, already allocated memory, and unclosed file pointer all become apparent. To reduce the number of errors a template system was introduced to generate the code used to allocate, deallocate, and expose the variables.
 
-The planter size pixel resolution of the digital terrain maps for detailed evaluation of overland flow friction and water storage is described in \citet{Stelling2012}. To represent water systems in civilized regions the 2D grid was extended with 1D channels and controllable structures (for example pumps, orifices, weirs). This allows for more realistic and interactive overland flooding simulation.
+Detailed evaluation of overland flow friction and water storage are simulated at subgrid scale. This enables to compute flooding at the planter size (\SI{0.5}{\meter}) pixel resolution of digital terrain maps. It also enables a speedup of a factor 100, as described in \citet{Stelling2012}. To represent water systems in civilized regions the 2D grid was extended with 1D channels and controllable structures (for example pumps, orifices, weirs). This allows for more realistic and interactive overland flooding simulation.
 
 The power of the subgrid concept is also applied to the hydrological processes in the subsoil. An important factor in potential flooding is the storage of water in the subsoil, or the lack thereof. The change in surface water volume is driven by several familiar processes:
 \[
 \Delta V_\mathrm{surface\ water} = (Q_\mathrm{overland} + Q_\mathrm{precipitation} - Q_\mathrm{infiltration} - Q_\mathrm{evaporation} + Q_\mathrm{drainage})\cdot\Delta t
 \]
 
-The heterogeneous landscape and land use are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance, and maximum infiltration.  Infiltration, evaporation, and drainage are evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance.
+The heterogeneous landscape and land use are specified in the model as gigapixel bitmaps for soil types, crop types, drainage resistance, and maximum infiltration. Infiltration, evaporation, and drainage are evaluated at pixel resolution, whereas the computational grid cells are larger and ensure high performance.
 
-These advances in the numerical model allow the model to act as a component in the interactive web-based model environment with a wide variety of possible applications.
+These advantages allow the model to act as a component in the interactive web-based model environment with a wide variety of possible applications.
 
 
 \section{Architecture}
@@ -214,18 +214,18 @@ One of the differences when comparing a desktop user to a web-based user is the 
 To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a}. This protocol is suitable for sending model variables over the internet. A model message consists of a metadata header in \ac{JSON} format, optionally followed by the serialized array. Listing \ref{lst:mmi} shows an example of an \ac{MMI} message. In this project the \ac{0MQ} protocol is used as a the underlying transport protocol. The advantage of using the \ac{MMI}, \ac{0MQ} combination is that it has flexible metadata, does not copy data, and is very fast.
 
 \begin{lstlisting}[caption=MMI message,label=lst:mmi]
-# The first part of the message contains metadata
-{
-  "name": "waterlevel",
-  "shape": [3,3],
-  "dtype": "float64",
-  "attributes": {
-       "standard_name": "sea_surface_altiude",
-       "units": "m"
+  # The first part of the message contains metadata
+  {
+    "name": "waterlevel",
+    "shape": [3,3],
+    "dtype": "float64",
+    "attributes": {
+      "standard_name": "sea_surface_altiude",
+      "units": "m"
+    }
   }
-}
-# The second part of the message contains a serialized array
-\x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
+  # The second part of the message contains a serialized array
+  \x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
 \end{lstlisting}
 
 Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly sent through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep, the chain is inverted. The model pushes its arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop supports user interactivity with the model.
@@ -305,35 +305,52 @@ The triangular mesh can be reused to filter levee artefacts. The triangulation c
 
 
 \section{Discussion and conclusion}
+
+% The major finding
+The major advancement is that we have enabled interactive web-based modeling at a high resolution and wide coverage.
+The interactive, exploratory, overland flooding simulations can be used in sessions with policy makers to help them make sensible decisions. Several developments have enabled this advancement.
+
+% Interactive
+The redesign of the numerical engine follows the trends set in inter-model coupling. Applying the hollywood principle transformed the engine from a static executable into an interactive component.
+
+% Web based
+Viewing model results through the web was already a reality (see \citep{Blower2013} for example). We have made progress to run and interact with models through the browser. The use of modern web technologies allows the same interface to be used on a browser, a phone and on a map table. What is not available, for complex models, is the ability to set up a new model through the web. At the moment it is still cumbersome to implement this functionality. However within the next few years it is likely that also this part of the modeling workflow will become browser-based.
+
+% High resolution
+The speedup of the model by applying the subgrid method allows for a faster interaction time and a more detailed resolution.
+% But we were not the first
 Several other models use a similar numerical approach, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the UnTRIM research package \citet{Casulli2000}. UnTRIM uses fully unstructured grids as opposed to the quad tree grids used here. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow. In the accompanying MIKE-SHE all relevant vertical hydrological processes are offered, also with some degree of subgrid-information for the infiltration part.
 
-The major advancement here is to redesign the numerical engine into a component that allows for external control and introspection. By combining this numerical model with the technical advancements described in this paper, we have enabled interactive web-based modeling at a high resolution and wide coverage. The use of modern web technologies allows the same interface to be used on a browser, a phone and on a map table.
+% Limitations
+The \threedi platform is suitable for exploratory purposes. Work has started on a skillbed for the \threedi platform. A skillbed is an automated test suite that compares results to analytical cases, measurements, and results from other numerical models.
 
+% Future research
 A lot of technical and numerical problems have been solved, but the methodological challenges of the new working methods are proving more difficult. An open issue is that end-users tend to confuse high resolution and higher frequency results with a high accuracy, a topic for further research.
 
+% the world is not square
 Possible future directions include combining the subgrid approach with an unstructured flow solver, such as Delft3D-FLOW Flexible Mesh \citep{Kernkamp2011}. The pixel based approach has the advantage that it is simple to implement and to scale. Unfortunately the world is not so square, especially not on larger scales, when one goes beyond the scale of a small country.
 
+% don't put everything into 1 model
 Another planned step is to incorporate or preferably to couple the system with other physical models. The monolithic approach of putting all processes into one model has proven cumbersome in previous implementations. The current model controller can easily incorporate other models because the communication and control are already out of the model engine. Water quality, coastal, and socio-economic models are possible candidates for inclusion in the platform.
 
-Viewing model results through the web is already a reality (see \citep{Blower2013} for example). We have made progress to run and interact with models through the browser. What is not available, for complex models, is the ability to set up a new model through the web. At the moment it is still cumbersome to implement this functionality. However within the next few years it is likely that also this part of the modeling workflow will become browser-based.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{apalike}
 \bibliography{./bibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{acronym}[AAAAA]
-\acro{CSS}{Cascading Style Sheets}
-\acro{MMI}{Model Message Interface}
-\acro{JSON}{JavaScript Object Notation}
-\acro{0MQ}[\O{}MQ]{Zero Message Queue}
-\acro{SVG}{Scalable Vector Graphics}
-\acro{H2O}[$\mathrm{H_2O}$]{water}
-\acro{BMI}{Basic Model Interface}
-\acro{API}{Application Programming Interface}
-\acro{GUI}{Graphical User Interface}
-\acro{DEM}{Digital Elevation Model}
-\acro{HTTP}{Hyper Text Transfer Protocol}
-\acro{IaaS}{Infrastructure as a Service}
+  \acro{CSS}{Cascading Style Sheets}
+  \acro{MMI}{Model Message Interface}
+  \acro{JSON}{JavaScript Object Notation}
+  \acro{0MQ}[\O{}MQ]{Zero Message Queue}
+  \acro{SVG}{Scalable Vector Graphics}
+  \acro{H2O}[$\mathrm{H_2O}$]{water}
+  \acro{BMI}{Basic Model Interface}
+  \acro{API}{Application Programming Interface}
+  \acro{GUI}{Graphical User Interface}
+  \acro{DEM}{Digital Elevation Model}
+  \acro{HTTP}{Hyper Text Transfer Protocol}
+  \acro{IaaS}{Infrastructure as a Service}
 \end{acronym}
 
 
