@@ -115,8 +115,8 @@
 \begin{abstract}
   The flooding of rural and urban areas is an increasing hazard to society. Accurate and timely predictions are essential for the water manager to prepare and respond to these hazards.
   Predicting flooding requires a numerical model that represents the physical processes (rain, evaporation, infiltration, overland flow, groundwater flow). This model, fed with measurements, and possible measures, calculates the expected flooding.
-  The traditional modeling process consists of a three step process: schematization setup, model running and post-processing, with a total feedback time of hours.  This process is suitable for confirmatory modeling. Most of the time, models are applied exploratory, requiring a different workflow.
-  Enabling exploratory modeling requires a shift in utilisation of the modeling instrument. Stakeholders are in control and together evaluate ideas by interacting with the model through a mobile compatible website, supported by the modelers’ expertise. Enabling this type of interactive modeling requires a new level of performance.
+  The traditional working method consists of a three step process: schematization setup, running and post-processing, with a total feedback time of hours.  This process is suitable for confirmatory modeling. Most of the time, models are applied exploratory, requiring a different workflow.
+  Enabling exploratory modeling requires a shift in utilisation of the instrument. Stakeholders are in control and together evaluate ideas by interacting with the model through a mobile compatible website, supported by the modelers’ expertise. Enabling this type of interactivity requires a new level of performance.
   The \threedi platform, in which the new approach was applied, consists of a new flooding and hydrological model (1D/2D) with a corresponding cloud based infrastructure. Applications in rural and urban areas of \orderof(1000km2) at a resolution of \orderof(0.1m) have shown its capabilities for both exploratory and confirmatory modeling.
   The ambition that every component should be at least a 100 times faster than the previous approach, resulted in several advancements, both in the numerical engine and the software that interacts with the user and pushes the data to the web. Here we show advancements in the architecture and model communication.
 
@@ -144,27 +144,23 @@ The amount of data involved in preparing the model is rapidly increasing. There 
 
 The \threedi  platform, in which these approaches and several new ones are applied, consists of a new overland flooding model (1D/2D) and a corresponding infrastructure. This platform enables interactive web-based modeling of rural and urban areas at coverages of \orderof(1000km2) at a resolution of \orderof(0.1m). Here we describe the advances in the numerical model, architecture, and visualization techniques.
 
-\section{Numerical model}
-The computational core originates from components of the {SOBEK} 1D2D flooding software \citep{Stelling2006} with three major improvements: \begin{inparaenum}
+\section{Numerical model: from passive to interactive}
+The \threedi computational core originates from components of the {SOBEK} 1D2D flooding software \citep{Stelling2006} with three major improvements: \begin{inparaenum}
 \item streamlining of the software to offer access to the memory of a running model,
 \item overland flow at subgrid scale and
 \item inclusion subsoil processes at subgrid scale
 \end{inparaenum}.
 
-The traditional standalone flooding program and its integrated \ac{GUI} have been split into dedicated components. A core library combines all numerical algorithms. On top of this library a light-weight interface library exposes the \ac{API}. This interface is compiled as a shared library with \emph{C} compatible external functions. The core and \ac{API} offer powerful new functionality for direct and fast interaction using introspection (implemented using the \ac{BMI} and the Hollywood-principle.
+To enable interactive use, the flooding software was stripped of it's main timeloop. A core library remains, with all numerical algorithms. On top of this library a light-weight \ac{API} exposes direct memory access the variables and to the control functions.
 
-By introspection, the outside world (e.g., a Python-based website, a C\#-\ac{GUI}, a MATLAB-script) can examine model state at run time. More specifically: get current water levels and flow fields, current running state of water pumps, and other structures, active meteorological forcings.
-% Fix sentence
-Each of these state variables can just as easily be \emph{set} as they are \emph{get}. These functions are implemented in correspondence with the \ac{BMI} standard \citep{Peckham2013}. The \ac{API} exposes memory pointers to relevant model state variables. This is how the model directly `feels' and uses its new state.
+By introspection, the outside world (e.g., a Python-based website, a C\#-\ac{GUI}, a MATLAB-script) can examine model state at run time. More specifically: get current water levels and flow fields, current running state of water pumps, and other structures, active meteorological forcings. Each of these state variables can just as easily be \emph{set} as they are \emph{get}. These functions are implemented in correspondence with the \ac{BMI} standard \citep{Peckham2013}. This is how the model directly `feels' and uses its new state.
 
 \begin{enumerate}
 \item \textbf{variable = get(``name'')}: Return a variable from the model
 \item \textbf{set(``name'', variable)}: Set a variable into the model
 \end{enumerate}
 
-The freedom of changing model state is possible due to the core and \ac{API} adhering to the Hollywood Principle: ``Don't call us, we'll call you''. The core or model does not run itself, but instead is instructed by the outside world. Typically, the timeloop from a conventional program is extracted and moved to the calling application; only the single timestep remains in the core.
-
-In several workshops, model coupling frameworks \citep[see][for an overview]{Jagers2010}, have agreed on the minimal interface that makes a model adhere to the Hollywood principles, by exposing the following methods:
+The freedom of interaction is possible due to the core adhering to the Hollywood Principle: ``Don't call us, we'll call you''. In several workshops, model coupling frameworks \citep[see][for an overview]{Jagers2010}, have agreed on the minimal interface that makes a model adhere to the Hollywood principles; by exposing the following methods:
 
 \begin{enumerate}
 \item \textbf{initialize()}: Load and initialize a model from file.
@@ -194,7 +190,7 @@ The heterogeneous landscape and land use are specified in the model as gigapixel
 These advantages allow the model to act as a component in the interactive web-based model environment with a wide variety of possible applications.
 
 
-\section{Architecture}
+\section{Platform architecture}
 Now that a numerical model is available that allows high resolution interactive modeling, how can we hook it up to a tablet, mobile phone and map table, all at the same time, to allow for social and interactive modeling?
 
 To enable such an environment the most logical choice is to use a web-based environment. Over the last years this choice has become more apparent. The large list of browser enhancements (for example inline \ac{SVG}, canvas, plugin free video \citep{Berjon2014}, and \ac{CSS} animations \citep{Jackson2013}) allow for rich visualizations independent of the device type. An overview of the system architecture is given in \autoref{fig:arch}. The architecture follows the general ``Model View Controller'' pattern \citep{Gamma1994}, with caching of events and data to accommodate for the model continuously running in the background. The implementation of this system required several technical innovations and social considerations.
@@ -209,7 +205,7 @@ To enable such an environment the most logical choice is to use a web-based envi
 
 The end-users, interact with the web-based \ac{GUI}. The design philosophy is minimalistic, allowing little room for user mistakes. For example discharge locations only have two options (normal and extreme discharge) (see \autoref{fig:twod}). Sessions with groups of end-users resulted in this design that provides freedom to explore without the insinuation that the model results are ``true''. The application of \ac{CSS} and \ac{SVG} allows the interface to scale between different screen resolutions so that it can be used on different devices (phones, tablets, browsers, map table).
 
-One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website, searching for a new ``frisson'' \citep{Carr2011}. To make sure that the model is ready to run when a user arrives a lot of attention is given to the provisioning of the model. Provisioning, in this context, is preparing a model controller so that it starts its computation on request. Machines are prepared and put on hold at one of the \ac{IaaS} providers (such as Amazon). These machines are prepared with a container that contains the model schematization, tables and grids, and hot restart files. These files are read into memory so that the model is ready to start its computation when needed, resulting in a time between a user logging in and a model start in under 5 seconds.
+One of the differences when comparing a desktop user to a web-based user is the short attention span. If no indication of progress is given for longer than two second users will start reloading, clicking erratically or will just close the website, searching for a new ``frisson'' \citep{Carr2011}. To make sure that the model is ready to run when a user arrives a lot of attention is given to the provisioning of the model. Provisioning, in this context, is preparing a model controller so that it starts its computation on request. The platform runs on GNU/Linux based \ac{IaaS} providers, such as Amazon. For each running engine (one customer can have multiple running engines) a machine is reserved. These machines are prepared with a container that contains the model schematization, tables and grids, and hot restart files. These files are read into memory so that the model is ready to start its computation when needed, resulting in a time between a user logging in and a model start in under 5 seconds.
 
 To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a}. This protocol is suitable for sending model variables over the internet. A model message consists of a metadata header in \ac{JSON} format, optionally followed by the serialized array. Listing \ref{lst:mmi} shows an example of an \ac{MMI} message. In this project the \ac{0MQ} protocol is used as a the underlying transport protocol. The advantage of using the \ac{MMI}, \ac{0MQ} combination is that it has flexible metadata, does not copy data, and is very fast.
 
@@ -228,9 +224,10 @@ To communicate the model results the \ac{MMI} protocol is used \citep{Baart2014a
   \x81\xb3b\xa0\xe8 ... \x01\x90\xe5\x84\xb5\xb0
 \end{lstlisting}
 
-Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. This short feedback loop is achieved using several techniques. User interactions are directly sent through websockets \citep{Hickson2012} to the model controller. These interactions are cached and pushed into the model on every timestep. These timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep, the chain is inverted. The model pushes its arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize the results. This fast feedback loop supports user interactivity with the model.
+Interaction is another challenge where timing is crucial. When a user interacts with the model, for example places a discharge point, turns on a pump or lowers an orifice, the user expects a response within a second. To achieve this, user interactions are directly sent through websockets \citep{Hickson2012}. These interactions are cached and pushed into the model on every timestep. Timesteps have to be kept shorter than in a classical model run, \SI{100}{\milli\second} is common. After a model timestep, the chain is inverted. The model pushes its arrays back in the direction of the browser, which is subscribed to these messages and can directly visualize.
 
-The social aspect is another source of interesting problems. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler, was present in the session.
+The social aspect is another source of interesting problems. Several group sessions with different settings have been tried. The current setup is that the model is run in a ``virtual room'', like a chat room. Multiple people can join the model run. One person is in control and others can view and zoom in on the same model run. Other users can request control of the model. The sessions worked best when a topic expert, not necessary a modeler, was present in the session. A detailed analysis of how the platform is used in a social context showed that the speed and flexibility determine the suitability \citep{Leskens2014}.
+
 
 \section{Visualization}
 The \threedi platform serves a wide variety of end-users. It is important to find a good balance between what is computed and how information is perceived. For scientific or engineering users one wants to provide information as close to the model results as possible. For less experienced end users it becomes important that the information is perceived correctly rather than that it is presented correctly.
@@ -238,6 +235,7 @@ The \threedi platform serves a wide variety of end-users. It is important to fin
 First a note about the performance. Humans will detect images at a rate of about \SI{12}{\per\second} as continuous \citep{Landis1954}. To enable the model results to be perceived as continuous, taking into account some random network delay, the aim is to generate a map within \SI{50}{\milli\second}.
 Generating results at this framerate can be done using two approaches. The first is to reduce the modeling timestep so that it computes in less than \SI{50}{\milli\second}. This is the only way to get true model results at this framerate.
 An alternative is to interpolate in time and provide the insinuation of continuous information.
+
 We use both approaches here. We reduce the calculation time so that interaction is fluent and we can pass the flicker fusion threshold. If one wants to use longer time steps we also visualize at a high framerate. An example of this is the visualization of river flow using dots that are animated with \ac{CSS} animations as a function of the current flow velocity (see \autoref{fig:oned}).
 
 Another performance technique used to achieve the high framerate is to use the ``Mahlen nach Zahlen'' method, a reference to a product from the German company Ravensburger~\textregistered. A map with cell numbers is prepared in advance. Once a quantity for a new timestep becomes available the map is filled in with the colors corresponding to the cell numbers. This achieves much faster rendering times than drawing the cells using geometry drawing function.
@@ -319,10 +317,10 @@ Viewing model results through the web was already a reality (see \citep{Blower20
 % High resolution
 The speedup of the model by applying the subgrid method allows for a faster interaction time and a more detailed resolution.
 % But we were not the first
-Several other models use a similar numerical approach, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the UnTRIM research package \citet{Casulli2000}. UnTRIM uses fully unstructured grids as opposed to the quad tree grids used here. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow. In the accompanying MIKE-SHE all relevant vertical hydrological processes are offered, also with some degree of subgrid-information for the infiltration part.
+Several other models use a similar numerical approach, albeit with limitations. The subgrid scheme by \citet{Stelling2012} is partly based on the subgrid method for flooding and drying by \citet{Casulli2009}, who implements his methods in the unstructured UnTRIM research package \citet{Casulli2000}. The coupled 1D-2D hydrodynamic model MIKE-FLOOD \citep{Dhi2014} also offers subgrid overland flow.
 
 % Limitations
-The \threedi platform is suitable for exploratory purposes. Work has started on a skillbed for the \threedi platform. A skillbed is an automated test suite that compares results to analytical cases, measurements, and results from other numerical models.
+The high resolution results in great ``face validity''. For now, the \threedi platform is suitable for exploratory purposes, as only a few marks of the confidence checklist \citep[][pp. 136]{Baart2013} have been ticked. Work has started on a skillbed for the \threedi platform. A skillbed is an automated test suite that compares results to a wide range of analytical cases, measurements, and results from other numerical models.
 
 % Future research
 A lot of technical and numerical problems have been solved, but the methodological challenges of the new working methods are proving more difficult. An open issue is that end-users tend to confuse high resolution and higher frequency results with a high accuracy, a topic for further research.
@@ -331,7 +329,7 @@ A lot of technical and numerical problems have been solved, but the methodologic
 Possible future directions include combining the subgrid approach with an unstructured flow solver, such as Delft3D-FLOW Flexible Mesh \citep{Kernkamp2011}. The pixel based approach has the advantage that it is simple to implement and to scale. Unfortunately the world is not so square, especially not on larger scales, when one goes beyond the scale of a small country.
 
 % don't put everything into 1 model
-Another planned step is to incorporate or preferably to couple the system with other physical models. The monolithic approach of putting all processes into one model has proven cumbersome in previous implementations. The current model controller can easily incorporate other models because the communication and control are already out of the model engine. Water quality, coastal, and socio-economic models are possible candidates for inclusion in the platform.
+Another planned step is to incorporate or preferably to couple the system with other numerical engines. The monolithic approach of putting all processes into one model has proven cumbersome in previous implementations. The current model controller can easily incorporate other models because the communication and control are already out of the model engine. Water quality, coastal, and socio-economic models are possible candidates for inclusion in the platform.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

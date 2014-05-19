@@ -112,19 +112,27 @@ The triangular mesh can be reused to filter levee artefacts. The triangulation c
 
 > 22. The conclusion is weak.
 
+Rewritten
+
 > 23. Sections 2 and 3 seem to overlap. Both contain various aspects regaarding the software framework and architecture. The paper has not been cleanly organized.
+
+Reformulated title so that the content is more clear. Removed some content.
+
 
 > 24. There is no discussion regarding the accuracy of the flood model itself. The paper primarily presents the software structure, features, and visualization capabilities.
 
+Put note that it is suitable for exploratory purposes and that validation is ongoing. Reference to confidence checklist added.
 
 
 > 25. The authors briefly mention how 3Di supports collaboration. It would be nice to see more discussion.
+
+Reference added to paper that discusses this topic in detail.
 
 
 
 > 26. This paper appears to discuss both the 3Di modeling platform/framework and a new flooding/hydrological model. Does the flood model have a name?
 
-
+The model does not have a name but is now referenced to as the 3Di computational core.
 
 > 27. Typo: Section 1, After subtitles add ":"'s, for example "Mono-disciplinary versus integrated <<insert ":">>"
 
@@ -132,5 +140,14 @@ Changed
 
 > 28. The discussion and relevance to cloud based modeling is very limited in this paper. There is only a brief mention of "IaaS" and "Amazon". It is unclear what has been tested and run using cloud computing techniques.
 
+Explained in more detail
+
 > 29. There is no discussion from the abstract on how or if 3Di achieves "100 times faster than the previous approach". What is the previous approach? What performance evaluations have been conducted?
 
+Put reference to Stelling for numerical part. The visualization part was also in this order of magnitude faster, but I have no time to create reproducable numbers.
+The introduction discusses this as an ambition.
+
+
+
+Furthermore:
+General cleanup, reduce the use of the word model. Remove redundant sentences.
